@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema31</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F0F0F0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 1;
+        }
+
+        section.contenedor-test, footer.rectangulo-resumen {
+            background-color: white;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        section.contenedor-test {
+            border: 1px solid #2b2a7f;
+        }
+
+        .titulo-test {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6c757d;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        .subtitulo-test {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0 0 20px 0;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .pregunta {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: left;
+            line-height: 1.5;
+        }
+        .opciones-contenedor {
+            display: grid;
+            gap: 2.5px;
+            margin-bottom: 25px;
+        }
+        .opcion {
+            background-color: white;
+            border: none;
+            color: #495057;
+            padding: 15px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s, border-color 0.2s;
+            text-align: left;
+        }
+        .opcion:hover {
+            background-color: #dee2e6;
+        }
+        .opcion.seleccionada {
+            background-color: #cce5ff;
+            border-color: #2b2a7f;
+            color: #004085;
+        }
+        .opcion.correcta {
+            background-color: #85d192;
+            border-color: #85d192;
+            color: #155724;
+            cursor: default;
+        }
+        .opcion.incorrecta {
+            background-color: #f0a1a8;
+            border-color: #f0a1a8;
+            color: #721c24;
+            cursor: default;
+        }
+        .opcion.correcta:hover, .opcion.incorrecta:hover {
+            background-color: #85d192;
+            color: #155724;
+            border-color: #85d192;
+        }
+        .opcion.incorrecta:hover {
+            background-color: #f0a1a8;
+            color: #721c24;
+            border-color: #f0a1a8;
+        }
+        .navegacion-btn-contenedor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .comprobar-btn, #finalizar-btn {
+            background-color: #cce5ff;
+            color: #004085;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .comprobar-btn:hover, #finalizar-btn:hover {
+            background-color: #b3d7ff;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .navegacion-btn {
+            background-color: #E0E0E0;
+            color: #555;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .navegacion-btn:hover {
+            background-color: #CFCFCF;
+        }
+        .navegacion-btn:disabled {
+            background-color: #f1f1f1;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        footer.rectangulo-resumen {
+            background-color: #F0F0F0;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            margin-top: 20px;
+            overflow-y: auto;
+        }
+        .indices-contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .indice-pregunta {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #495057;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .indice-pregunta.activa {
+            background-color: #cce5ff;
+            color: #004085;
+            border: none;
+        }
+        .indice-pregunta:hover {
+            background-color: #dee2e6;
+        }
+        .indice-pregunta.correcta {
+            background-color: #85d192;
+            color: #155724;
+        }
+        .indice-pregunta.incorrecta {
+            background-color: #f0a1a8;
+            color: #495057;
+        }
+
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .custom-modal {
+            background-color: white;
+            padding: 30px;
+            border-radius: 2px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .custom-modal h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .custom-modal button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .resultados-finales-container {
+            text-align: center;
+        }
+        .resultados-finales-texto {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .resultados-finales-correctas {
+            color: #155724;
+            font-weight: bold;
+        }
+        .resultados-finales-incorrectas {
+            color: #721c24;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 800px) {
+            section.contenedor-test, footer.rectangulo-resumen {
+                width: 95%;
+                padding: 15px;
+            }
+            .opcion {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <p class="subtitulo-test" style="text-align: justify;"><strong>Tema 31. Relaciones interadministrativas:</strong> Comunicación, colaboración y coordinación en la administración pública.</p>
+        <section class="contenedor-test">
+            <article id="contenido-pregunta">
+                <div class="pregunta" id="pregunta-texto"></div>
+                <div class="opciones-contenedor" id="opciones-contenedor"></div>
+                <div class="navegacion-btn-contenedor">
+                    <button id="comprobar-btn" class="comprobar-btn">Comprobar</button>
+                    <button id="siguiente-btn" class="navegacion-btn">Siguiente</button>
+                </div>
+            </article>
+            <div id="resultados-finales" class="hidden resultados-finales-container">
+                <h2>Resultados Finales</h2>
+                <div id="resultados-texto" class="resultados-finales-texto"></div>
+            </div>
+        </section>
+        <footer class="rectangulo-resumen" id="rectangulo-resumen">
+            <div class="indices-contenedor" id="indices-contenedor"></div>
+            <button id="finalizar-btn" class="comprobar-btn" style="width: 100%; margin-top: 20px;">Finalizar Test</button>
+        </footer>
+    </div>
+
+    <div id="custom-modal-overlay" class="custom-modal-overlay hidden">
+        <div class="custom-modal">
+            <p id="custom-modal-message"></p>
+            <button id="custom-modal-ok">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let preguntas = [
+  {
+    "question": "31. ¿QUÉ TIPOS DE INTEROPERABILIDAD SE DISTINGUEN EN EL ESQUEMA NACIONAL DE INTEROPERABILIDAD (ENI)?:",
+    "options": [
+      "a) Organizativa.",
+      "b) Léxica.",
+      "c) Técnica.",
+      "d) Las respuestas a) y c) son correctas."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "50. LAS NUEVAS OBLIGACIONES INTRODUCIDAS POR LA LEY 39/2015, DE 1 DE OCTUBRE, DEL PROCEDIMIENTO ADMINISTRATIVO COMÚN DE LAS ADMINISTRACIONES PÚBLICAS Y POR LA LEY 40/2015, DE 1 DE OCTUBRE, DE RÉGIMEN JURÍDICO DEL SECTOR PÚBLICO SE PUEDEN RESUMIR EN:",
+    "options": [
+      "a) Garantizar la seguridad en la tramitación electrónica.",
+      "b) Tramitar electrónicamente los expedientes.",
+      "c) Garantizar la agilidad en la tramitación.",
+      "d) Ninguna de las respuestas anteriores es correcta."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "53. SEGÚN LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, ¿DÓNDE DEBEN LAS ADMINISTRACIONES PÚBLICAS PUBLICAR Y MANTENER ACTUALIZADAS A EFECTOS INFORMATIVOS LAS RELACIONES DE PROCEDIMIENTOS DE SU COMPETENCIA CON INDICACIÓN DE LOS PLAZOS MÁXIMOS DE DURACIÓN DE LOS MISMOS, ASÍ COMO DE LOS EFECTOS QUE PRODUZCA EL SILENCIO ADMINISTRATIVO?",
+    "options": [
+      "a) En sus portales web.",
+      "b) En el Boletín Oficial del Estado.",
+      "c) En el Boletín Oficial que corresponda.",
+      "d) En sus portales web y en el Boletín Oficial que corresponda."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "256. LAS PERSONAS FÍSICAS PODRÁN UTILIZAR, PARA RELACIONARSE CON LA ADMINISTRACIÓN:",
+    "options": [
+      "a) Sólo los certificados electrónicos incorporados al Documento Nacional de Identidad.",
+      "b) Sólo los certificados electrónicos reconocidos y los sistemas de firma electrónica avanzada que se admitan por la Administración.",
+      "c) Los certificados electrónicos incorporados al Documento Nacional de Identidad, los certificados electrónicos reconocidos y los sistemas de firma electrónica avanzada que se admitan por la Administración.",
+      "d) Ninguna de las opciones anteriores es correcta."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "258. ¿TIENEN DERECHO LOS/AS CIUDADANOS/AS A CONOCER EL ESTADO DE LA TRAMITACIÓN DE UN PROCEDIMIENTO ADMINISTRATIVO CONCRETO?",
+    "options": [
+      "a) Sí, en todo momento, aunque no tengan la condición de personas interesadas en el mismo",
+      "b) Sí, en cualquier fase del procedimiento anterior al trámite de audiencia, aunque no tengan la condición de personas interesadas en el procedimiento",
+      "c) Sí, en todo momento, si tienen la condición de personas interesadas en el procedimiento",
+      "d) Sí, sólo en las fases anteriores al trámite de audiencia, si tienen la condición de personas interesadas en dicho procedimiento."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "259. DE CONFORMIDAD CON LA LEY 39/2015, DE 1 DE OCTUBRE, DEL PROCEDIMIENTO ADMINISTRATIVO COMÚN, LA CONSTANCIA DE DOCUMENTOS Y ACTUACIONES EN UN ARCHIVO ELECTRÓNICO FACILITA EL CUMPLIMIENTO DE LAS OBLIGACIONES",
+    "options": [
+      "a) de congruencia",
+      "b) de transparencia",
+      "c) de participación",
+      "d) de cercanía"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "265. ¿QUÉ IMPLICA LA TRANSPARENCIA DE LA ADMINISTRACIÓN?",
+    "options": [
+      "a) Identificación del personal de atención al público.",
+      "b) Acceso a la información precisa",
+      "c) Publicidad de los resultados.",
+      "d) Todas las respuestas son correctas."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "269. EN RELACIÓN CON EL DERECHO DE ACCESO A LA INFORMACIÓN PÚBLICA QUE OBRE EN PODER DE LAS ADMINISTRACIONES PÚBLICAS, SE ENTIENDE POR “INFORMACIÓN PÚBLICA”, DE ACUERDO CON LA LEY 19/2013, DE 9 DE DICIEMBRE, DE TRANSPARENCIA, ACCESO A LA INFORMACIÓN PÚBLICA Y BUEN GOBIERNO:",
+    "options": [
+      "a) Los contenidos o documentos, cualquiera que sea su formato o soporte, que hayan sido elaborados o adquiridos en el ejercicio de sus funciones",
+      "b) Los contenidos o documentos, siempre en formato papel o digital, elaborados o adquiridos en el ejercicio de sus funciones",
+      "c) Los contenidos o documentos, siempre en formato papel, elaborados o adquiridos en el ejercicio de sus funciones",
+      "d) Sólo se refiere a la información contenida en formato papel, cualquiera que sea el origen de la misma."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "271. INDIQUE LA OPCIÓN CORRECTA EN RELACIÓN A LA ACTUACIÓN Y FUNCIONAMIENTO DEL SECTOR PÚBLICO POR MEDIOS ELECTRÓNICOS.",
+    "options": [
+      "a) Las empresas privadas han de tener una sede electrónica si son adjudicatarias de algún servicio público de competencia de cualquiera de las administraciones públicas.",
+      "b) Las sedes electrónicas siempre han de estar bajo la titularidad de una Administración Pública, aunque la gestión y administración puede ser subcontratada con empresas expertas en la materia.",
+      "c) La sede electrónica de cada Administración ha de preservar la protección de datos personales de las personas usuarias; con ese objetivo, se constituirán sistemas informáticos cerrados sin ninguna conexión e interoperabilidad con las sedes de otras Administraciones Públicas.",
+      "d) La titularidad de una sede electrónica ha de corresponder necesariamente a una Administración Pública o bien a uno o varios organismos públicos o entidades de derecho público en el ámbito de sus competencias."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "275. LA ADMINISTRACIÓN PÚBLICA EN SU RELACIÓN CON LA CIUDADANÍA TIENE QUE SER:",
+    "options": [
+      "a) Receptiva, accesible y transparente",
+      "b) Receptiva y accesible pero no transparente",
+      "c) Receptiva y transparente pero no accesible",
+      "d) Ni receptiva ni accesible pero sí transparente"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "276. ¿QUÉ IMPLICA LA IDEA DE QUE LOS SERVICIOS QUE PRESTA LA ADMINISTRACIÓN PÚBLICA SON DE NATURALEZA UNIVERSAL?",
+    "options": [
+      "a) Que sirven para ciudadanos/as de todos los países",
+      "b) Igualdad en el trato a todas las personas usuarias",
+      "c) Segmentación del mercado público",
+      "d) Que no tiene barreras físicas ni psíquicas"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "277. ¿CÚAL DE LOS SIGUIENTES ES UN REQUISITO IMPRESCINDIBLE PARA UNA ATENCIÓN DE CALIDAD A LA CIUDADANÍA?",
+    "options": [
+      "a) Intervenir aleatoriamente sin responder a demandas",
+      "b) Que el personal de atención telefónica tenga voz grave",
+      "c) Escuchar permanentemente a la ciudadanía",
+      "d) Que el personal de atención al público modere sus respuestas negativas"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "278. ¿CÚAL DE LAS SIGUIENTES OPCIONES ES UNA VENTAJA DE LA IMPLANTACIÓN DE LA VENTANILLA ÚNICA?",
+    "options": [
+      "a) Ahorro en desplazamientos de la ciudadanía",
+      "b) Desaparición de colas",
+      "c) Simplificación de trámites",
+      "d) Todas las respuestas son correctas"
+    ],
+    "correct": 3
+  },
+  {
+    "question": "279. LA INFORMACIÓN ADMINISTRATIVA ES EL CAUCE POR EL QUE LA PERSONA CIUDADANA PUEDE ACCEDER:",
+    "options": [
+      "a) Al conocimiento de sus derechos y obligaciones.",
+      "b) A la utilización de los bienes y servicios públicos.",
+      "c) Al Boletín Oficial.",
+      "d) Entre otros, a los contenidos de las respuestas a) y b)."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "280. LA ATENCIÓN AL CIUDADANO/A POR MEDIOS TELEMÁTICOS:",
+    "options": [
+      "a) Es el único canal disponible para las personas menores de 65 años, salvo que se acredite alguna discapacidad física que dificulte esa atención por medios telemáticos.",
+      "b) Tiene como principal finalidad el ahorro de personal.",
+      "c) Permite acercar los servicios de la Administración a las personas, diversificando los canales de acceso.",
+      "d) Es la única posible a partir de la entrada en vigor del Real Decreto 203/2021, de 30 de marzo, por el que se aprueba el Reglamento de actuación y funcionamiento del sector público por medios electrónicos."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "282. LA INFORMACIÓN ADMINISTRATIVA SOBRE LOS REQUISITOS JURÍDICOS O TÉCNICOS QUE LAS DISPOSICIONES IMPONGAN A LOS PROYECTOS, ACTUACIONES O SOLICITUDES QUE UNA PERSONA SE PROPONGA REALIZAR, SE CONSIDERA UNA INFORMACIÓN:",
+    "options": [
+      "a) De carácter particular.",
+      "b) De carácter general.",
+      "c) Sin importancia.",
+      "d) Confidencial."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "283. SE CONSIDERA INFORMACIÓN ADMINISTRATIVA DE CARÁCTER PARTICULAR:",
+    "options": [
+      "a) La concerniente al estado o contenido de los procedimientos en tramitación",
+      "b) La que concierne a la identificación de las autoridades y personal al servicio de la Administración bajo cuya responsabilidad se tramiten aquellos procedimientos.",
+      "c) La referida a los datos de carácter personal que afecten de alguna forma a la intimidad o privacidad de las personas físicas.",
+      "d) Las tres opciones anteriores son correctas."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "284. LA ATENCIÓN PERSONALIZADA A LA CIUDADANÍA CONTEMPLA ENTRE SUS OBJETIVOS:",
+    "options": [
+      "a) La recepción de las iniciativas o sugerencias formuladas por los/as ciudadanos/as para mejorar la calidad de los servicios.",
+      "b) La recepción de las iniciativas o sugerencias formuladas por los/as propios/as empleados/as públicos/as para mejorar la calidad de los servicios.",
+      "c) Las respuestas a) y b) son posibles.",
+      "d) El desplazamiento del personal funcionario al domicilio particular de la persona que requiera la realización de un trámite."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "285. ¿LA CONSTITUCIÓN ESPAÑOLA RECONOCE A LOS/AS CIUDADANOS/AS EL EJERCICIO DEL DERECHO DE PETICIÓN?",
+    "options": [
+      "a) Sí, pero la petición ha de ser presentada directamente a título individual.",
+      "b) Sí, siempre que la petición sea presentada por escrito por un colectivo social.",
+      "c) Sí, individual o colectivamente, por escrito y en la forma y con los efectos que determine la ley.",
+      "d) El derecho de petición sólo está contemplado en la Ley 39/2015, del Procedimiento Administrativo Común."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "286. CUANDO UN CIUDADANO PRECISA DE UNA ACLARACIÓN SOBRE ALGÚN PROCEDIMIENTO, TRÁMITE O REQUISITO PARA ACCEDER A UN SERVICIO PÚBLICO:",
+    "options": [
+      "a) Deberá consultar la legislación adecuada.",
+      "b) Tendrá derecho a recibir orientación e información personalizada.",
+      "c) Deberá solicitar asesoramiento jurídico-administrativo en una Gestoría privada.",
+      "d) Acudirá al servicio de información, previo pago de la cuota correspondiente."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "287. EN SUS RELACIONES CON LAS ADMINISTRACIONES PÚBLICAS, ¿LOS/AS CIUDADANOS/AS TIENEN EL DERECHO A UTILIZAR LAS LENGUAS OFICIALES EN EL TERRITORIO DE SU COMUNIDAD AUTÓNOMA?:",
+    "options": [
+      "a) Es un derecho que las Administraciones Públicas de las diversas Comunidades Autónomas han de garantizar a la ciudadanía.",
+      "b) Sólo si las Administraciones de esa Comunidad Autónoma ofrecen expresamente esa posibilidad.",
+      "c) Sólo en las administraciones autonómicas.",
+      "d) Sólo si el/la funcionario/a las conoce."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "303. SEÑALE LA RESPUESTA INCORRECTA SEGÚN LO DISPUESTO EN REAL DECRETO 203/2021, DE 30 DE MARZO, POR EL QUE SE APRUEBA EL REGLAMENTO DE ACTUACIÓN Y FUNCIONAMIENTO DEL SECTOR PÚBLICO POR MEDIOS ELECTRÓNICOS. LAS ADMINISTRACIONES PÚBLICAS PODRÁN UTILIZAR LOS SIGUIENTES SISTEMAS PARA SU IDENTIFICACIÓN ELECTRÓNICA Y PARA LA AUTENTICACIÓN DE LOS DOCUMENTOS ELECTRÓNICOS QUE PRODUZCAN:",
+    "options": [
+      "a) Sistemas de firma electrónica basados en la utilización de certificados de dispositivo seguro o medio equivalente que permita identificar la sede electrónica y el establecimiento con ella de comunicaciones seguras.",
+      "b) Sistemas de firma electrónica para la actuación administrativa automatizada.",
+      "c) Un código QR impreso en los documentos que necesariamente ha de integrar la información relativa a la Administración generadora del documento, así como de la persona que ostenta la competencia sobre la materia expresada en el documento.",
+      "d) Intercambio electrónico de datos en entornos cerrados de comunicación, conforme a lo específicamente acordado entre las partes."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "312. LA IMPLANTACIÓN DE UN SISTEMA ÚNICO DE INFORMACIÓN ADMINISTRATIVA SUPONE:",
+    "options": [
+      "a) La implantación de un sistema de información unificado y multicanal.",
+      "b) Que el ciudadano podrá acudir a una única administración.",
+      "c) La implantación de un sistema único, con un solo canal de transmisión.",
+      "d) Que la Administración se dirige al ciudadano unilateralmente."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "359. ¿EN CUÁL DE LOS SIGUIENTES DISPOSITIVOS PREDOMINA LA COMUNICACIÓN?",
+    "options": [
+      "a) En las publicaciones internas",
+      "b) En los indicadores de control",
+      "c) En las encuestas",
+      "d) En las reuniones"
+    ],
+    "correct": 3
+  },
+  {
+    "question": "444. INDIQUE CUAL NO ES UN PRINCIPIO GENERAL RECOGIDO EN REAL DECRETO 203/2021, DE 30 DE MARZO, POR EL QUE SE APRUEBA EL REGLAMENTO DE ACTUACIÓN Y FUNCIONAMIENTO DEL SECTOR PÚBLICO POR MEDIOS ELECTRÓNICOS.",
+    "options": [
+      "a) Principios de tecnología privativa y de vigilancia al progreso de las tecnologías y sistemas de comunicaciones electrónicas.",
+      "b) Principio de accesibilidad.",
+      "c) Principio de facilidad de uso.",
+      "d) Principio de personalización y proactividad,"
+    ],
+    "correct": 0
+  }
+];
+            let DOM = {};
+
+            const estado = {
+                preguntaActual: 0,
+                respuestasCorrectas: 0,
+                respuestasIncorrectas: 0,
+                totalPreguntas: preguntas.length
+            };
+
+            let botonesOpciones;
+            let indicesPreguntas;
+
+            function toggleClasses(element, addClass, removeClasses) {
+                if (removeClasses && removeClasses.length > 0) {
+                    removeClasses.forEach(cls => element.classList.remove(cls));
+                }
+                if (addClass) {
+                    element.classList.add(addClass);
+                }
+            }
+
+            function mostrarModal(message) {
+                DOM.modalMessage.textContent = message;
+                DOM.modalOverlay.classList.remove('hidden');
+            }
+
+            function ocultarModal() {
+                DOM.modalOverlay.classList.add('hidden');
+            }
+
+            function marcarRespuesta(index) {
+                const pregunta = preguntas[index];
+
+                const botonCorrecto = botonesOpciones[pregunta.correct];
+                const indiceCorrecto = indicesPreguntas[index];
+
+                toggleClasses(indiceCorrecto, null, ['correcta', 'incorrecta']);
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonCorrecto, 'correcta');
+
+                    if (pregunta.esCorrecta) {
+                        toggleClasses(indiceCorrecto, 'correcta');
+                    } else {
+                        const botonSeleccionado = botonesOpciones[pregunta.respuestaUsuario];
+                        toggleClasses(botonSeleccionado, 'incorrecta');
+                        toggleClasses(indiceCorrecto, 'incorrecta');
+                    }
+                }
+            }
+
+            function mostrarPregunta() {
+                DOM.resultadosFinales.classList.add('hidden');
+                DOM.contenidoPregunta.classList.remove('hidden');
+                DOM.rectanguloResumen.classList.remove('hidden');
+                DOM.finalizarBtn.textContent = 'Finalizar Test';
+
+                const pregunta = preguntas[estado.preguntaActual];
+                DOM.preguntaTexto.textContent = pregunta.question;
+
+                botonesOpciones.forEach((boton, index) => {
+                    toggleClasses(boton, null, ['seleccionada', 'correcta', 'incorrecta']);
+                    boton.textContent = pregunta.options[index];
+                    boton.disabled = pregunta.comprobada;
+                });
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonesOpciones[pregunta.respuestaUsuario], 'seleccionada');
+                    if (pregunta.comprobada) {
+                        marcarRespuesta(estado.preguntaActual);
+                    }
+                }
+
+                if (indicesPreguntas) {
+                    indicesPreguntas.forEach(indice => indice.classList.remove('activa'));
+                    indicesPreguntas[estado.preguntaActual].classList.add('activa');
+                }
+
+                DOM.comprobarBtn.classList.toggle('hidden', pregunta.comprobada);
+                actualizarEstadoBotones();
+            }
+
+            function manejarSeleccion(event) {
+                const boton = event.target.closest('.opcion');
+                if (boton) {
+                    const pregunta = preguntas[estado.preguntaActual];
+                    if (!pregunta.comprobada) {
+                        botonesOpciones.forEach(b => toggleClasses(b, null, ['seleccionada']));
+                        toggleClasses(boton, 'seleccionada');
+                        pregunta.respuestaUsuario = parseInt(boton.dataset.index);
+                    }
+                }
+            }
+
+            function comprobarRespuesta() {
+                const pregunta = preguntas[estado.preguntaActual];
+                if (pregunta.respuestaUsuario === null) {
+                    mostrarModal('Por favor, selecciona una respuesta antes de comprobar.');
+                    return;
+                }
+
+                pregunta.comprobada = true;
+                pregunta.esCorrecta = (pregunta.respuestaUsuario === pregunta.correct);
+
+                if (pregunta.esCorrecta) {
+                    estado.respuestasCorrectas++;
+                } else {
+                    estado.respuestasIncorrectas++;
+                }
+
+                marcarRespuesta(estado.preguntaActual);
+                actualizarResumen();
+
+                botonesOpciones.forEach(boton => boton.disabled = true);
+                DOM.comprobarBtn.classList.add('hidden');
+            }
+
+            function actualizarEstadoBotones() {
+                const esUltimaPregunta = estado.preguntaActual === estado.totalPreguntas - 1;
+                DOM.siguienteBtn.textContent = esUltimaPregunta ? 'Terminar' : 'Siguiente';
+            }
+
+            function siguientePregunta() {
+                if (estado.preguntaActual < estado.totalPreguntas - 1) {
+                    estado.preguntaActual++;
+                    mostrarPregunta();
+                } else {
+                    mostrarResultados();
+                }
+            }
+
+            function mostrarResultados() {
+                DOM.contenidoPregunta.classList.add('hidden');
+                DOM.resultadosFinales.classList.remove('hidden');
+
+                // Recalcular el recuento total acumulado
+                let correctas = 0;
+                let incorrectas = 0;
+                preguntas.forEach(p => {
+                    if (p.comprobada) {
+                        if (p.esCorrecta) correctas++;
+                        else incorrectas++;
+                    }
+                });
+
+                const correctasSpan = `<span class="resultados-finales-correctas">Correctas: ${correctas}</span>`;
+                const incorrectasSpan = `<span class="resultados-finales-incorrectas">Incorrectas: ${incorrectas}</span>`;
+                DOM.resultadosTexto.innerHTML = `${correctasSpan} | ${incorrectasSpan}`;
+
+                DOM.finalizarBtn.textContent = 'Volver al Test';
+            }
+
+            function crearIndices() {
+                DOM.indicesContenedor.innerHTML = Array.from(
+                    {length: estado.totalPreguntas},
+                    (_, i) => `<div class="indice-pregunta" data-index="${i}">${i+1}</div>`
+                ).join('');
+                indicesPreguntas = DOM.indicesContenedor.querySelectorAll('.indice-pregunta');
+            }
+
+            function manejarClickIndice(event) {
+                const indice = event.target.closest('.indice-pregunta');
+                if (indice) {
+                    estado.preguntaActual = parseInt(indice.dataset.index);
+                    mostrarPregunta();
+                }
+            }
+
+            function actualizarResumen() {
+                indicesPreguntas.forEach((indice, index) => {
+                    toggleClasses(indice, null, ['correcta', 'incorrecta']);
+                    const pregunta = preguntas[index];
+                    if (pregunta.comprobada) {
+                        if (pregunta.esCorrecta) {
+                            toggleClasses(indice, 'correcta');
+                        } else {
+                            toggleClasses(indice, 'incorrecta');
+                        }
+                    }
+                });
+            }
+
+            function toggleFinalizarTest() {
+                if (DOM.resultadosFinales.classList.contains('hidden')) {
+                    mostrarResultados();
+                } else {
+                    mostrarPregunta();
+                }
+            }
+
+            function cacheElements() {
+                return {
+                    preguntaTexto: document.getElementById('pregunta-texto'),
+                    opcionesContenedor: document.getElementById('opciones-contenedor'),
+                    siguienteBtn: document.getElementById('siguiente-btn'),
+                    comprobarBtn: document.getElementById('comprobar-btn'),
+                    indicesContenedor: document.getElementById('indices-contenedor'),
+                    contenedorTest: document.querySelector('section.contenedor-test'),
+                    rectanguloResumen: document.querySelector('footer.rectangulo-resumen'),
+                    modalOverlay: document.getElementById('custom-modal-overlay'),
+                    modalMessage: document.getElementById('custom-modal-message'),
+                    modalOkBtn: document.getElementById('custom-modal-ok'),
+                    contenidoPregunta: document.getElementById('contenido-pregunta'),
+                    resultadosFinales: document.getElementById('resultados-finales'),
+                    resultadosTexto: document.getElementById('resultados-texto'),
+                    finalizarBtn: document.getElementById('finalizar-btn')
+                };
+            }
+
+            function initData() {
+                preguntas = preguntas.map(p => ({
+                    ...p,
+                    respuestaUsuario: null,
+                    comprobada: false,
+                    esCorrecta: false
+                }));
+
+                const fragmentoOpciones = document.createDocumentFragment();
+                for (let i = 0; i < 4; i++) {
+                    const boton = document.createElement('button');
+                    boton.className = 'opcion';
+                    boton.dataset.index = i;
+                    fragmentoOpciones.appendChild(boton);
+                }
+                DOM.opcionesContenedor.appendChild(fragmentoOpciones);
+
+                botonesOpciones = Array.from(DOM.opcionesContenedor.querySelectorAll('.opcion'));
+
+                crearIndices();
+            }
+
+            function setupEvents() {
+                DOM.contenedorTest.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'siguiente-btn') {
+                        siguientePregunta();
+                    } else if (target.id === 'comprobar-btn') {
+                        comprobarRespuesta();
+                    } else if (target.classList.contains('opcion')) {
+                        manejarSeleccion(event);
+                    }
+                });
+
+                DOM.rectanguloResumen.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'finalizar-btn') {
+                        toggleFinalizarTest();
+                    } else if (target.classList.contains('indice-pregunta')) {
+                        manejarClickIndice(event);
+                    }
+                });
+
+                DOM.modalOkBtn.addEventListener('click', ocultarModal);
+            }
+
+            function init() {
+                DOM = cacheElements();
+                initData();
+                setupEvents();
+                mostrarPregunta();
+            }
+
+            init();
+        });
+    </script>
+
+    <script>
+        // Informa a la ventana padre (index.html) de la altura real de este
+        // contenido, para que el iframe que lo muestra se ajuste sin dejar
+        // hueco extra abajo. Se reenvía cada vez que cambia el contenido
+        // (cambio de pregunta, comprobar respuesta, finalizar test, etc.).
+        (function () {
+            function reportarAltura() {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage(
+                        { tipo: "alturaContenido", altura: document.documentElement.scrollHeight },
+                        "*"
+                    );
+                }
+            }
+            window.addEventListener("load", reportarAltura);
+            new MutationObserver(reportarAltura).observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+        })();
+    </script>
+</body>
+</html>

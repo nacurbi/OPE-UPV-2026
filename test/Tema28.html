@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema28</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F0F0F0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 1;
+        }
+
+        section.contenedor-test, footer.rectangulo-resumen {
+            background-color: white;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        section.contenedor-test {
+            border: 1px solid #2b2a7f;
+        }
+
+        .titulo-test {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6c757d;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        .subtitulo-test {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0 0 20px 0;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .pregunta {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: left;
+            line-height: 1.5;
+        }
+        .opciones-contenedor {
+            display: grid;
+            gap: 2.5px;
+            margin-bottom: 25px;
+        }
+        .opcion {
+            background-color: white;
+            border: none;
+            color: #495057;
+            padding: 15px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s, border-color 0.2s;
+            text-align: left;
+        }
+        .opcion:hover {
+            background-color: #dee2e6;
+        }
+        .opcion.seleccionada {
+            background-color: #cce5ff;
+            border-color: #2b2a7f;
+            color: #004085;
+        }
+        .opcion.correcta {
+            background-color: #85d192;
+            border-color: #85d192;
+            color: #155724;
+            cursor: default;
+        }
+        .opcion.incorrecta {
+            background-color: #f0a1a8;
+            border-color: #f0a1a8;
+            color: #721c24;
+            cursor: default;
+        }
+        .opcion.correcta:hover, .opcion.incorrecta:hover {
+            background-color: #85d192;
+            color: #155724;
+            border-color: #85d192;
+        }
+        .opcion.incorrecta:hover {
+            background-color: #f0a1a8;
+            color: #721c24;
+            border-color: #f0a1a8;
+        }
+        .navegacion-btn-contenedor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .comprobar-btn, #finalizar-btn {
+            background-color: #cce5ff;
+            color: #004085;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .comprobar-btn:hover, #finalizar-btn:hover {
+            background-color: #b3d7ff;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .navegacion-btn {
+            background-color: #E0E0E0;
+            color: #555;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .navegacion-btn:hover {
+            background-color: #CFCFCF;
+        }
+        .navegacion-btn:disabled {
+            background-color: #f1f1f1;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        footer.rectangulo-resumen {
+            background-color: #F0F0F0;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            margin-top: 20px;
+            overflow-y: auto;
+        }
+        .indices-contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .indice-pregunta {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #495057;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .indice-pregunta.activa {
+            background-color: #cce5ff;
+            color: #004085;
+            border: none;
+        }
+        .indice-pregunta:hover {
+            background-color: #dee2e6;
+        }
+        .indice-pregunta.correcta {
+            background-color: #85d192;
+            color: #155724;
+        }
+        .indice-pregunta.incorrecta {
+            background-color: #f0a1a8;
+            color: #495057;
+        }
+
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .custom-modal {
+            background-color: white;
+            padding: 30px;
+            border-radius: 2px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .custom-modal h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .custom-modal button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .resultados-finales-container {
+            text-align: center;
+        }
+        .resultados-finales-texto {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .resultados-finales-correctas {
+            color: #155724;
+            font-weight: bold;
+        }
+        .resultados-finales-incorrectas {
+            color: #721c24;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 800px) {
+            section.contenedor-test, footer.rectangulo-resumen {
+                width: 95%;
+                padding: 15px;
+            }
+            .opcion {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <p class="subtitulo-test" style="text-align: justify;"><strong>Tema 28. Reglamento de funcionamiento del Consejo de Gobierno de la UPV/EHU:</strong> Composición y funciones.</p>
+        <section class="contenedor-test">
+            <article id="contenido-pregunta">
+                <div class="pregunta" id="pregunta-texto"></div>
+                <div class="opciones-contenedor" id="opciones-contenedor"></div>
+                <div class="navegacion-btn-contenedor">
+                    <button id="comprobar-btn" class="comprobar-btn">Comprobar</button>
+                    <button id="siguiente-btn" class="navegacion-btn">Siguiente</button>
+                </div>
+            </article>
+            <div id="resultados-finales" class="hidden resultados-finales-container">
+                <h2>Resultados Finales</h2>
+                <div id="resultados-texto" class="resultados-finales-texto"></div>
+            </div>
+        </section>
+        <footer class="rectangulo-resumen" id="rectangulo-resumen">
+            <div class="indices-contenedor" id="indices-contenedor"></div>
+            <button id="finalizar-btn" class="comprobar-btn" style="width: 100%; margin-top: 20px;">Finalizar Test</button>
+        </footer>
+    </div>
+
+    <div id="custom-modal-overlay" class="custom-modal-overlay hidden">
+        <div class="custom-modal">
+            <p id="custom-modal-message"></p>
+            <button id="custom-modal-ok">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let preguntas = [
+  {
+    "question": "61. EL MANTENIMIENTO DEL REGISTRO GENERAL DE LA EHU ES FUNCIÓN DE",
+    "options": [
+      "a) La Secretaria o Secretario General.",
+      "b) La Rectora o Rector.",
+      "c) Los o las jefes de servicio correspondientes.",
+      "d) Los Vicerrectorados de Campus."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "97. EL SERVICIO DE PREVENCIÓN DE LA EHU ES:",
+    "options": [
+      "a) Un servicio propio",
+      "b) Un servicio ajeno",
+      "c) Un servicio asumido personalmente por el empresario",
+      "d) Un servicio mediante trabajador designado"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "106. LAS DECISIONES RELATIVAS AL RÉGIMEN DISCIPLINARIO DE ESTUDIANTES, PERSONAL DOCENTE E INVESTIGADOR Y PERSONAL TÉCNICO DE GESTIÓN Y ADMINISTRACIÓN Y SERVICIOS QUE LA LEGISLACIÓN VIGENTE NO ATRIBUYA A OTRO ÓRGANO SERÁN ADOPTADAS POR:",
+    "options": [
+      "a) El o la Aldezle",
+      "b) La Rectora o El Rector",
+      "c) El Comité Arbitral",
+      "d) El Comité de Seguridad y Salud Intercampus"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "116. LOS COMITÉS DESEGURIDAD Y SALUD DE LA EHU SON:",
+    "options": [
+      "a) Un Comité Intercampus, un Comité de Seguridad y Salud por cada Campus y un Comité para la Seguridad Medioambiental.",
+      "b) Un Comité Intercampus, un Comité para la Seguridad Medioambiental e Inspección de Trabajo.",
+      "c) Un Comité Intercampus y un Comité de Seguridad y Salud por cada Campus.",
+      "d) Un Comité Intercampus, un Comité de Seguridad y Salud por cada Campus e Inspección de Trabajo."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "120. SEGÚN LOS ESTATUTOS DE LA EHU, SON CENTROS DOCENTES...",
+    "options": [
+      "a) Las escuelas y facultades.",
+      "b) Los campus universitarios.",
+      "c) Los colegios mayores.",
+      "d) Los aularios."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "123. ¿ QUIÉN TIENE COMPETENCIA PARA APROBAR EL REGLAMENTO DE UN CENTRO DOCENTE?",
+    "options": [
+      "a) La Junta de Centro.",
+      "b) El Consejo de Dirección.",
+      "c) La Junta de Campus.",
+      "d) El Consejo de Gobierno."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "124. ¿QUIÉN NOMBRA A LOS/AS DECANOS/AS Y A LOS/AS DIRECTORES/AS DE LOS CENTROS?",
+    "options": [
+      "a) La Junta de Centro.",
+      "b) El/ La Rector/a.",
+      "c) El/la Vicerrector/a de Campus.",
+      "d) El Gobierno Vasco."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "125. SEGÚN LOS ESTATUTOS DE LA EHU, LA PERSONA RESPONSABLE DE LA ORGANIZACIÓN Y GESTIÓN DE LOS SERVICIOS ADMINISTRATIVOS Y ECONÓMICOS DE LA EHU ES:",
+    "options": [
+      "a) La Rectora o el Rector",
+      "b) La Gerente o el Gerente.",
+      "c) El/la Vicerrector/a de Campus.",
+      "d) El/la Vicegerente/a de Patrimonio y Contratación."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "126. ¿QUÉ ES LA PLANTILLA DE REFERENCIA DEL PERSONAL TÉCNICO, DE GESTIÓN Y ADMINISTRACIÓN Y SERVICIOS?",
+    "options": [
+      "a) Es un instrumento de gestión para los recursos humanos.",
+      "b) Es un instrumento de planificación de los recursos humanos.",
+      "c) Es un instrumento de control de los recursos humanos.",
+      "d) Es un instrumento de valoración de puestos de trabajo."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "127. LAS SECCIONES DEPARTAMENTALES:",
+    "options": [
+      "a) Podrán constituirse únicamente en aquellos Departamentos que desarrollen sus actividades en distintos Campus. La creación o supresión de secciones requerirá la reforma del Reglamento.",
+      "b) Podrán constituirse únicamente en aquellos Departamentos que desarrollen sus actividades en distintos Centros Docentes. La creación o supresión de secciones requerirá la reforma del Reglamento.",
+      "c) Podrán constituirse en aquellos Departamentos que desarrollen sus actividades en distintos Campus. La creación o supresión de secciones no requerirá la reforma del Reglamento.",
+      "d) Ninguna de las respuestas anteriores es correcta."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "130. EL CONSEJO DE GOBIERNO DICTARÁ LAS NORMAS REGULADORAS DE LAS CONVOCATORIAS DE CONCURSO DE ACCESO DE PROFESORADO:",
+    "options": [
+      "a) A propuesta del Vicerrector o Vicerrectora de Personal Docente e Investigador.",
+      "b) A propuesta directa del Rector o Rectora.",
+      "c) A propuesta del Consejo de Departamento correspondiente.",
+      "d) A propuesta de la Comisión de Profesorado."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "131. LA APROBACIÓN DE LA NORMATIVA REGULADORA DE DOCTORADO Y SUS EFECTOS EN EL ENCARGO DOCENTE CORRESPONDE A:",
+    "options": [
+      "a) El Consejo de Gobierno, a propuesta del Consejo de Departamento correspondiente.",
+      "b) La Comisión de Postgrado.",
+      "c) La Comisión de Estudios de Doctorado.",
+      "d) Ninguna de las opciones anteriores es correcta."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "134. LA COMISIÓN DE PROFESORADO DE LA EHU:",
+    "options": [
+      "a) Estará presidida por el Decano o la Decana de Facultad de mayor antigüedad en la EHU.",
+      "b) Estará presidida por el Vicerrector o Vicerrectora de Personal Docente e Investigador.",
+      "c) Estará presidida por el Rector o la Rectora.",
+      "d) Estará compuesta por 10 personas del profesorado permanente doctor con, al menos, 10 años de experiencia, pertenecientes a diferentes áreas de conocimiento."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "135. EN RELACIÓN AL PROFESORADO FUNCIONARIO DE LA EHU, LAS RECLAMACIONES PLANTEADAS POR DIVERGENCIAS FRENTE AL HORARIO Y CALENDARIO ACADÉMICOS SERÁN ESTUDIADAS Y RESUELTAS POR:",
+    "options": [
+      "a) El Consejo de Departamento.",
+      "b) El Consejo Social.",
+      "c) El Decano o la Decana de Facultad o Director o Directora de Escuela.",
+      "d) El Consejo de Gobierno."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "136. RESPECTO AL ANTICIPO DE NÓMINA DEL PERSONAL DOCENTE E INVESTIGADOR LABORAL DE LA EHU:",
+    "options": [
+      "a) El importe máximo del adelanto a conceder será de 6.000 euros.",
+      "b) Deberá transcurrir un periodo mínimo de un año entre la cancelación de un adelanto de nómina y la solicitud de otro.",
+      "c) No se podrán solicitar anticipos por conceptos ya solicitados con anterioridad en más de tres ocasiones.",
+      "d) En solicitudes de anticipo para adquisición de vivienda habitual, el plazo máximo de reintegro será de 36 mensualidades."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "137. CUÁL DE LAS SIGUIENTES AFIRMACIONES ES CIERTA RESPECTO A LA JORNADA LABORAL DEL PROFESORADO DE LA EHU:",
+    "options": [
+      "a) Las obligaciones docentes semanales de los Titulares de Universidad con régimen de dedicación a tiempo completo serán de un máximo de 12 horas lectivas.",
+      "b) Las obligaciones docentes semanales de los Asociados de Escuela Universitaria con régimen de dedicación a tiempo completo contemplan un máximo de 8 horas de tutoría.",
+      "c) Las horas lectivas dedicadas a programas de doctorado se computarán el triple.",
+      "d) Ninguna de las opciones anteriores es correcta."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "138. RESPECTO A LA DURACIÓN DEL CONTRATO DEL PERSONAL LABORAL DOCENTE E INVESTIGADOR DE LA EHU:",
+    "options": [
+      "a) El contrato de profesorado adjunto tendrá una duración máxima de 4 años.",
+      "b) El contrato de profesorado ayudante tendrá una duración mínima de 2 años.",
+      "c) El contrato de profesorado agregado tendrá una duración indefinida.",
+      "d) El contrato de profesorado asociado tendrá una duración máxima de 4 años, sin perjuicio de que una vez finalizado se pueda obtener un nuevo contrato."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "150. LOS DELEGADOS Y DELEGADAS DE PREVENCIÓN SON",
+    "options": [
+      "a) Los/as responsables de diseñar los Planes de Emergencia.",
+      "b) Junto con los/as Técnicos/as de Prevención planificarán anualmente la actividad preventiva.",
+      "c) Los/as representantes de los/as trabajadores y trabajadoras de la Universidad en materia de Prevención y tendrán las competencias y derechos recogidos en la normativa sobre Prevención de Riesgos Laborales.",
+      "d) Serán los/as responsables de gestionar los planes de Emergencia."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "151. NO ES FUNCIÓN DE LOS CENTROS DOCENTES",
+    "options": [
+      "a) Adaptar y desarrollar en el Centro la planificación lingüística general",
+      "b) Promover la realización de actividades de carácter científico",
+      "c) Coordinar e impartir las enseñanzas de un área o varias de conocimiento",
+      "d) Elaborar su memoria anual"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "152. ¿QUÉ TIPOS DE CENTROS UNIVERSITARIOS CONFIGURAN LA EHU?",
+    "options": [
+      "a) Propios y Sección de Centros",
+      "b) Propios y adscritos",
+      "c) Propios y Unidades Delegadas",
+      "d) Integrados, Departamentos e Institutos Universitarios"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "154. ¿DE QUIÉN DEPENDE ORGÁNICA Y FUNCIONALMENTE LA GERENCIA?",
+    "options": [
+      "a) Del Consejo de Gobierno",
+      "b) Del/la Vicerrector/a Asuntos Económicos",
+      "c) Del/ de la Rector/a",
+      "d) Del Consejo Social"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "168. ¿QUÉ RESPUESTA ES LA CORRECTA SEGÚN LOS ESTATUTOS DE LA EHU?",
+    "options": [
+      "a) Las Escuelas, Facultades y Departamentos son los Centros encargados de la organización de la enseñanza, dirigiendo, coordinando y gestionando los procesos académicos conducentes a la obtención de títulos de grado u otras ofertas docentes.",
+      "b) Las Escuelas, Facultades y Departamentos son los Centros encargados de la organización de la enseñanza, dirigiendo, coordinando y gestionando procesos académicos y administrativos conducentes a la obtención de títulos de grado",
+      "c) Las Escuelas y Facultades son los Centros encargados de la organización de la enseñanza, dirigiendo, coordinando y gestionando procesos académicos y administrativos conducentes a la obtención de títulos de grado",
+      "d) Las Facultades y los Departamentos organizan las enseñanzas universitarias y dirigen y gestionan los procesos académicos y administrativos conducentes a la obtención de títulos académicos u otras ofertas docentes."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "169. ¿QUÉ RESPUESTA ES LA CORRECTA SEGÚN LOS ESTATUTOS DE LA EHU?",
+    "options": [
+      "a) El/la Rector/a es la máxima autoridad académica universitaria de la EHU, ostenta su representación y ejerce su dirección y gobierno.",
+      "b) El/la Rector/a es la persona responsable de la organización y gestión de los servicios administrativos y económicos de la EHU, de acuerdo con las directrices marcadas por sus órganos de gobierno.",
+      "c) El/la Rector/a es el/la fedatario/a de los actos y acuerdos de los órganos colegiados de gobierno y de Administración general de la EHU.",
+      "d) Las respuestas a) y c) son verdaderas."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "170. LOS ÓRGANOS DE GOBIERNO, REPRESENTACIÓN, DIRECCIÓN Y GESTIÓN DE UN CENTRO DOCENTE SON AL MENOS LOS SIGUIENTES:",
+    "options": [
+      "a) La Junta de Centro, el Decanato o la Dirección, y la Secretaría Académica.",
+      "b) La Junta de Centro, el Decanato o la Dirección, la Secretaría Académica y la Administración.",
+      "c) La Junta de Centro, el Decanato o la Dirección, los Vicedecanatos o Subdirecciones y la Secretaría Académica.",
+      "d) La Junta de Centro, el Decanato o la Dirección, los Vicedecanatos o Subdirecciones, la Secretaría Académica y la Administración."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "171. DIGA CUÁL DE ESTAS AFIRMACIONES ES CORRECTA DE ACUERDO CON EL ART. 2 DEL REGLAMENTO MARCO DE LOS DEPARTAMENTOS DE LA EHU:",
+    "options": [
+      "a) Los Departamentos determinan las necesidades de plantilla de profesorado y personal de administración y servicios.",
+      "b) Los Departamentos eligen al Decano/a o Director/a del Centro.",
+      "c) Los Departamentos impulsan y apoyan la investigación relativa al área o áreas de conocimiento de su competencia.",
+      "d) Todas las respuestas son falsas."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "174. EL/LA SECRETARIO/A ACADÉMICO/A DE UN CENTRO ES:",
+    "options": [
+      "a) La persona que ejerce la dirección jerárquica del personal de administración y servicios de la Secretaría del Centro",
+      "b) La persona fedataria de los actos y acuerdos de los órganos colegiados de gobierno, representación y administración del centro",
+      "c) La persona responsable de proponer los límites de plazas al Vicerrectorado de Campus",
+      "d) La persona que coordina los Departamentos que imparten docencia en el centro."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "176. DE LAS FUNCIONES SEÑALADAS, ¿CUÁL NO PUEDE DESEMPEÑARSE POR EL CAMPUS, SEGÚN LOS ESTATUTOS DE LA EHU?",
+    "options": [
+      "a) Adoptar, desarrollar y ejecutar Programas o Medidas Generales",
+      "b) Desarrollar y potenciar las relaciones institucionales, así como la extensión cultural y universitaria.",
+      "c) Aprobar la creación de un departamento del Campus.",
+      "d) Gestionar los recursos e infraestructuras de uso compartido y de apoyo a la docencia e investigación existentes en su ámbito."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "178. DE LOS SIGUIENTES, INDIQUE EL ÚNICO QUE ES UN CENTRO ADSCRITO A LA EHU:",
+    "options": [
+      "a) Escuela de Ingeniería de Gipuzkoa",
+      "b) Escuela de Ingeniería de Bilbao",
+      "c) Escuela Universitaria de Enfermería de Vitoria-Gasteiz",
+      "d) Escuela Técnica Superior de Arquitectura"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "188. CONFORME AL ARTÍCULO 133 DE LOS ESTATUTOS DE LA EHU PARA LA CONSTITUCIÓN DE UN DEPARTAMENTO EL NÚMERO MÍNIMO DE PDI SERÁ:",
+    "options": [
+      "a) 12 personas del personal docente e investigador con vinculación permanente a tiempo completo o equivalente que deberán ser, además, doctores/as y, al menos, una dotación de personal de administración y servicios.",
+      "b) 18 personas del personal docente e investigador con vinculación permanente a tiempo completo o equivalente, de las cuales, al menos 12 serán doctores/as.",
+      "c) 18 personas del personal docente e investigador con vinculación permanente a tiempo completo o equivalente, de las cuales, al menos 12 serán doctores/as y, al menos, una dotación de personal de administración y servicios.",
+      "d) 18 personas del personal docente e investigador con vinculación permanente, de las cuales, al menos 12 serán doctores/as a tiempo completo o equivalente."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "189. LOS DEPARTAMENTOS UNIVERSITARIOS SON LOS ENCARGADOS DE COORDINAR E IMPARTIR LAS ENSEÑANZAS EN UNO O VARIOS CENTROS ¿CUÁL ES EL CRITERIO DE CONSTITUCIÓN DE LOS DEPARTAMENTOS?",
+    "options": [
+      "a) Por ámbitos de conocimiento",
+      "b) Por Centros en los que imparten docencia",
+      "c) Por Campus",
+      "d) Por áreas de investigación"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "190. DE ACUERDO CON LOS ESTATUTOS DE LA EHU, LA DIRECCIÓN FUNCIONAL DEL PERSONAL TÉCNICO, DE GESTIÓN Y ADMINISTRACIÓN Y SERVICIOS DE LOS DEPARTAMENTOS LE CORRESPONDE:",
+    "options": [
+      "a) Al Decano o Director del Centro.",
+      "b) Al Administrador del Centro.",
+      "c) Al Director del Departamento.",
+      "d) A la Junta de Centro."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "209. DE ENTRE LOS SIGUIENTES SÓLO UN PUESTO DE TRABAJO CORRESPONDE AL PERSONAL FUNCIONARIO DE LA EHU.",
+    "options": [
+      "a) Técnico/a Auxiliar de Biblioteca.",
+      "b) Técnico/a Especialista de Laboratorio.",
+      "c) Oficial de Mantenimiento",
+      "d) Técnico/a de Sistemas."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "329. ¿EN CUÁNTAS ÁREAS ESTÁ DIVIDIDO EL SERVICIO DE PREVENCIÓN DE LA EHU?",
+    "options": [
+      "a) Está dividido en 2 áreas: el área sanitaria y el área técnica.",
+      "b) Está dividido en 2 áreas: el área informática y el área técnica.",
+      "c) Está dividido en 3 áreas: informática, técnica y sanitaria.",
+      "d) Está dividido en 2 áreas: el área sanitaria y el área informática."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "330. EL SERVICIO DE PREVENCIÓN DE LA EHU TIENE COMO OBLIGACIÓN ASESORAR:",
+    "options": [
+      "a) Sólo a la Administración.",
+      "b) Sólo a su personal trabajador y a sus representantes.",
+      "c) A la Administración y a su personal trabajador y sus representantes.",
+      "d) A la administración, a su personal trabajador, a sus representantes y a los Comités de Campus e Intercampus de Seguridad y Salud Laboral."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "331. LA IMPLANTACIÓN DEL PLAN DE AUTOPROTECCIÓN COMPRENDERÁ:",
+    "options": [
+      "a) Que todo el personal de la EHU esté atento ante una emergencia",
+      "b) Que el Servicio de Prevención dé la señal en caso de emergencia",
+      "c) Comprenderá, al menos, la formación y capacitación del personal, el establecimiento de mecanismos de información al público y la provisión de los medios y recursos precisa para la aplicabilidad del plan.",
+      "d) Que todos los recursos funcionen adecuadamente de cara a una inspección de trabajo."
+    ],
+    "correct": 2
+  }
+];
+            let DOM = {};
+
+            const estado = {
+                preguntaActual: 0,
+                respuestasCorrectas: 0,
+                respuestasIncorrectas: 0,
+                totalPreguntas: preguntas.length
+            };
+
+            let botonesOpciones;
+            let indicesPreguntas;
+
+            function toggleClasses(element, addClass, removeClasses) {
+                if (removeClasses && removeClasses.length > 0) {
+                    removeClasses.forEach(cls => element.classList.remove(cls));
+                }
+                if (addClass) {
+                    element.classList.add(addClass);
+                }
+            }
+
+            function mostrarModal(message) {
+                DOM.modalMessage.textContent = message;
+                DOM.modalOverlay.classList.remove('hidden');
+            }
+
+            function ocultarModal() {
+                DOM.modalOverlay.classList.add('hidden');
+            }
+
+            function marcarRespuesta(index) {
+                const pregunta = preguntas[index];
+
+                const botonCorrecto = botonesOpciones[pregunta.correct];
+                const indiceCorrecto = indicesPreguntas[index];
+
+                toggleClasses(indiceCorrecto, null, ['correcta', 'incorrecta']);
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonCorrecto, 'correcta');
+
+                    if (pregunta.esCorrecta) {
+                        toggleClasses(indiceCorrecto, 'correcta');
+                    } else {
+                        const botonSeleccionado = botonesOpciones[pregunta.respuestaUsuario];
+                        toggleClasses(botonSeleccionado, 'incorrecta');
+                        toggleClasses(indiceCorrecto, 'incorrecta');
+                    }
+                }
+            }
+
+            function mostrarPregunta() {
+                DOM.resultadosFinales.classList.add('hidden');
+                DOM.contenidoPregunta.classList.remove('hidden');
+                DOM.rectanguloResumen.classList.remove('hidden');
+                DOM.finalizarBtn.textContent = 'Finalizar Test';
+
+                const pregunta = preguntas[estado.preguntaActual];
+                DOM.preguntaTexto.textContent = pregunta.question;
+
+                botonesOpciones.forEach((boton, index) => {
+                    toggleClasses(boton, null, ['seleccionada', 'correcta', 'incorrecta']);
+                    boton.textContent = pregunta.options[index];
+                    boton.disabled = pregunta.comprobada;
+                });
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonesOpciones[pregunta.respuestaUsuario], 'seleccionada');
+                    if (pregunta.comprobada) {
+                        marcarRespuesta(estado.preguntaActual);
+                    }
+                }
+
+                if (indicesPreguntas) {
+                    indicesPreguntas.forEach(indice => indice.classList.remove('activa'));
+                    indicesPreguntas[estado.preguntaActual].classList.add('activa');
+                }
+
+                DOM.comprobarBtn.classList.toggle('hidden', pregunta.comprobada);
+                actualizarEstadoBotones();
+            }
+
+            function manejarSeleccion(event) {
+                const boton = event.target.closest('.opcion');
+                if (boton) {
+                    const pregunta = preguntas[estado.preguntaActual];
+                    if (!pregunta.comprobada) {
+                        botonesOpciones.forEach(b => toggleClasses(b, null, ['seleccionada']));
+                        toggleClasses(boton, 'seleccionada');
+                        pregunta.respuestaUsuario = parseInt(boton.dataset.index);
+                    }
+                }
+            }
+
+            function comprobarRespuesta() {
+                const pregunta = preguntas[estado.preguntaActual];
+                if (pregunta.respuestaUsuario === null) {
+                    mostrarModal('Por favor, selecciona una respuesta antes de comprobar.');
+                    return;
+                }
+
+                pregunta.comprobada = true;
+                pregunta.esCorrecta = (pregunta.respuestaUsuario === pregunta.correct);
+
+                if (pregunta.esCorrecta) {
+                    estado.respuestasCorrectas++;
+                } else {
+                    estado.respuestasIncorrectas++;
+                }
+
+                marcarRespuesta(estado.preguntaActual);
+                actualizarResumen();
+
+                botonesOpciones.forEach(boton => boton.disabled = true);
+                DOM.comprobarBtn.classList.add('hidden');
+            }
+
+            function actualizarEstadoBotones() {
+                const esUltimaPregunta = estado.preguntaActual === estado.totalPreguntas - 1;
+                DOM.siguienteBtn.textContent = esUltimaPregunta ? 'Terminar' : 'Siguiente';
+            }
+
+            function siguientePregunta() {
+                if (estado.preguntaActual < estado.totalPreguntas - 1) {
+                    estado.preguntaActual++;
+                    mostrarPregunta();
+                } else {
+                    mostrarResultados();
+                }
+            }
+
+            function mostrarResultados() {
+                DOM.contenidoPregunta.classList.add('hidden');
+                DOM.resultadosFinales.classList.remove('hidden');
+
+                // Recalcular el recuento total acumulado
+                let correctas = 0;
+                let incorrectas = 0;
+                preguntas.forEach(p => {
+                    if (p.comprobada) {
+                        if (p.esCorrecta) correctas++;
+                        else incorrectas++;
+                    }
+                });
+
+                const correctasSpan = `<span class="resultados-finales-correctas">Correctas: ${correctas}</span>`;
+                const incorrectasSpan = `<span class="resultados-finales-incorrectas">Incorrectas: ${incorrectas}</span>`;
+                DOM.resultadosTexto.innerHTML = `${correctasSpan} | ${incorrectasSpan}`;
+
+                DOM.finalizarBtn.textContent = 'Volver al Test';
+            }
+
+            function crearIndices() {
+                DOM.indicesContenedor.innerHTML = Array.from(
+                    {length: estado.totalPreguntas},
+                    (_, i) => `<div class="indice-pregunta" data-index="${i}">${i+1}</div>`
+                ).join('');
+                indicesPreguntas = DOM.indicesContenedor.querySelectorAll('.indice-pregunta');
+            }
+
+            function manejarClickIndice(event) {
+                const indice = event.target.closest('.indice-pregunta');
+                if (indice) {
+                    estado.preguntaActual = parseInt(indice.dataset.index);
+                    mostrarPregunta();
+                }
+            }
+
+            function actualizarResumen() {
+                indicesPreguntas.forEach((indice, index) => {
+                    toggleClasses(indice, null, ['correcta', 'incorrecta']);
+                    const pregunta = preguntas[index];
+                    if (pregunta.comprobada) {
+                        if (pregunta.esCorrecta) {
+                            toggleClasses(indice, 'correcta');
+                        } else {
+                            toggleClasses(indice, 'incorrecta');
+                        }
+                    }
+                });
+            }
+
+            function toggleFinalizarTest() {
+                if (DOM.resultadosFinales.classList.contains('hidden')) {
+                    mostrarResultados();
+                } else {
+                    mostrarPregunta();
+                }
+            }
+
+            function cacheElements() {
+                return {
+                    preguntaTexto: document.getElementById('pregunta-texto'),
+                    opcionesContenedor: document.getElementById('opciones-contenedor'),
+                    siguienteBtn: document.getElementById('siguiente-btn'),
+                    comprobarBtn: document.getElementById('comprobar-btn'),
+                    indicesContenedor: document.getElementById('indices-contenedor'),
+                    contenedorTest: document.querySelector('section.contenedor-test'),
+                    rectanguloResumen: document.querySelector('footer.rectangulo-resumen'),
+                    modalOverlay: document.getElementById('custom-modal-overlay'),
+                    modalMessage: document.getElementById('custom-modal-message'),
+                    modalOkBtn: document.getElementById('custom-modal-ok'),
+                    contenidoPregunta: document.getElementById('contenido-pregunta'),
+                    resultadosFinales: document.getElementById('resultados-finales'),
+                    resultadosTexto: document.getElementById('resultados-texto'),
+                    finalizarBtn: document.getElementById('finalizar-btn')
+                };
+            }
+
+            function initData() {
+                preguntas = preguntas.map(p => ({
+                    ...p,
+                    respuestaUsuario: null,
+                    comprobada: false,
+                    esCorrecta: false
+                }));
+
+                const fragmentoOpciones = document.createDocumentFragment();
+                for (let i = 0; i < 4; i++) {
+                    const boton = document.createElement('button');
+                    boton.className = 'opcion';
+                    boton.dataset.index = i;
+                    fragmentoOpciones.appendChild(boton);
+                }
+                DOM.opcionesContenedor.appendChild(fragmentoOpciones);
+
+                botonesOpciones = Array.from(DOM.opcionesContenedor.querySelectorAll('.opcion'));
+
+                crearIndices();
+            }
+
+            function setupEvents() {
+                DOM.contenedorTest.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'siguiente-btn') {
+                        siguientePregunta();
+                    } else if (target.id === 'comprobar-btn') {
+                        comprobarRespuesta();
+                    } else if (target.classList.contains('opcion')) {
+                        manejarSeleccion(event);
+                    }
+                });
+
+                DOM.rectanguloResumen.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'finalizar-btn') {
+                        toggleFinalizarTest();
+                    } else if (target.classList.contains('indice-pregunta')) {
+                        manejarClickIndice(event);
+                    }
+                });
+
+                DOM.modalOkBtn.addEventListener('click', ocultarModal);
+            }
+
+            function init() {
+                DOM = cacheElements();
+                initData();
+                setupEvents();
+                mostrarPregunta();
+            }
+
+            init();
+        });
+    </script>
+
+    <script>
+        // Informa a la ventana padre (index.html) de la altura real de este
+        // contenido, para que el iframe que lo muestra se ajuste sin dejar
+        // hueco extra abajo. Se reenvía cada vez que cambia el contenido
+        // (cambio de pregunta, comprobar respuesta, finalizar test, etc.).
+        (function () {
+            function reportarAltura() {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage(
+                        { tipo: "alturaContenido", altura: document.documentElement.scrollHeight },
+                        "*"
+                    );
+                }
+            }
+            window.addEventListener("load", reportarAltura);
+            new MutationObserver(reportarAltura).observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+        })();
+    </script>
+</body>
+</html>

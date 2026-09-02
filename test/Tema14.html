@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema14</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F0F0F0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 1;
+        }
+
+        section.contenedor-test, footer.rectangulo-resumen {
+            background-color: white;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        section.contenedor-test {
+            border: 1px solid #2b2a7f;
+        }
+
+        .titulo-test {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6c757d;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        .subtitulo-test {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0 0 20px 0;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .pregunta {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: left;
+            line-height: 1.5;
+        }
+        .opciones-contenedor {
+            display: grid;
+            gap: 2.5px;
+            margin-bottom: 25px;
+        }
+        .opcion {
+            background-color: white;
+            border: none;
+            color: #495057;
+            padding: 15px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s, border-color 0.2s;
+            text-align: left;
+        }
+        .opcion:hover {
+            background-color: #dee2e6;
+        }
+        .opcion.seleccionada {
+            background-color: #cce5ff;
+            border-color: #2b2a7f;
+            color: #004085;
+        }
+        .opcion.correcta {
+            background-color: #85d192;
+            border-color: #85d192;
+            color: #155724;
+            cursor: default;
+        }
+        .opcion.incorrecta {
+            background-color: #f0a1a8;
+            border-color: #f0a1a8;
+            color: #721c24;
+            cursor: default;
+        }
+        .opcion.correcta:hover, .opcion.incorrecta:hover {
+            background-color: #85d192;
+            color: #155724;
+            border-color: #85d192;
+        }
+        .opcion.incorrecta:hover {
+            background-color: #f0a1a8;
+            color: #721c24;
+            border-color: #f0a1a8;
+        }
+        .navegacion-btn-contenedor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .comprobar-btn, #finalizar-btn {
+            background-color: #cce5ff;
+            color: #004085;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .comprobar-btn:hover, #finalizar-btn:hover {
+            background-color: #b3d7ff;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .navegacion-btn {
+            background-color: #E0E0E0;
+            color: #555;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .navegacion-btn:hover {
+            background-color: #CFCFCF;
+        }
+        .navegacion-btn:disabled {
+            background-color: #f1f1f1;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        footer.rectangulo-resumen {
+            background-color: #F0F0F0;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            margin-top: 20px;
+            overflow-y: auto;
+        }
+        .indices-contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .indice-pregunta {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #495057;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .indice-pregunta.activa {
+            background-color: #cce5ff;
+            color: #004085;
+            border: none;
+        }
+        .indice-pregunta:hover {
+            background-color: #dee2e6;
+        }
+        .indice-pregunta.correcta {
+            background-color: #85d192;
+            color: #155724;
+        }
+        .indice-pregunta.incorrecta {
+            background-color: #f0a1a8;
+            color: #495057;
+        }
+
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .custom-modal {
+            background-color: white;
+            padding: 30px;
+            border-radius: 2px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .custom-modal h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .custom-modal button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .resultados-finales-container {
+            text-align: center;
+        }
+        .resultados-finales-texto {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .resultados-finales-correctas {
+            color: #155724;
+            font-weight: bold;
+        }
+        .resultados-finales-incorrectas {
+            color: #721c24;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 800px) {
+            section.contenedor-test, footer.rectangulo-resumen {
+                width: 95%;
+                padding: 15px;
+            }
+            .opcion {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <p class="subtitulo-test" style="text-align: justify;"><strong>Tema 14. Ley 11/2022, de Empleo Público Vasco:</strong> Derechos, deberes e incompatibilidades. Régimen disciplinario. Situaciones administrativas del personal funcionario de carrera.</p>
+        <section class="contenedor-test">
+            <article id="contenido-pregunta">
+                <div class="pregunta" id="pregunta-texto"></div>
+                <div class="opciones-contenedor" id="opciones-contenedor"></div>
+                <div class="navegacion-btn-contenedor">
+                    <button id="comprobar-btn" class="comprobar-btn">Comprobar</button>
+                    <button id="siguiente-btn" class="navegacion-btn">Siguiente</button>
+                </div>
+            </article>
+            <div id="resultados-finales" class="hidden resultados-finales-container">
+                <h2>Resultados Finales</h2>
+                <div id="resultados-texto" class="resultados-finales-texto"></div>
+            </div>
+        </section>
+        <footer class="rectangulo-resumen" id="rectangulo-resumen">
+            <div class="indices-contenedor" id="indices-contenedor"></div>
+            <button id="finalizar-btn" class="comprobar-btn" style="width: 100%; margin-top: 20px;">Finalizar Test</button>
+        </footer>
+    </div>
+
+    <div id="custom-modal-overlay" class="custom-modal-overlay hidden">
+        <div class="custom-modal">
+            <p id="custom-modal-message"></p>
+            <button id="custom-modal-ok">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let preguntas = [
+  {
+    "question": "121. DE ACUERDO CON EL ARTÍCULO 26 DEL REAL DECRETO 412/2014, DE 6 DE JUNIO, POR EL QUE SE ESTABLECE LA NORMATIVA BÁSICA DE LOS PROCEDIMIENTOS DE ADMISIÓN A LAS ENSEÑANZAS UNIVERSITARIAS OFICIALES DE GRADO, EXISTE UN PORCENTAJE DE PLAZAS RESERVADAS A ESTUDIANTES CON DISCAPACIDAD. ESTE PORCENTAJE ES:",
+    "options": [
+      "a) 3%",
+      "b) 4%",
+      "c) 5%",
+      "d) 6%"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "425. INDIQUE LA AFIRMACIÓN INCORRECTA EN REFERENCIA AL SISTEMA DE SEGURIDAD SOCIAL:",
+    "options": [
+      "a) El Sistema Especial para Empleados de Hogar está dentro del Régimen General de la Seguridad Social.",
+      "b) El Régimen Especial de Minería del Carbón es uno de los Regímenes Especiales de la Seguridad Social.",
+      "c) El Régimen Especial Agrario es uno de los Regímenes Especiales de la Seguridad Social.",
+      "d) El Sistema Especial de la Industria Resinera está dentro del Régimen General de la Seguridad Social."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "426. SEÑALE LA AFIRMACIÓN INCORRECTA:",
+    "options": [
+      "a) El Sistema de la Seguridad Social da cobertura sólo a las personas que ejercen una actividad profesional, así como a los familiares o asimilados que tuvieran a su cargo.",
+      "b) El Sistema de la Seguridad Social es un conjunto de regímenes a través de los cuales el Estado garantiza a las personas comprendidas en su campo de aplicación la protección adecuada en las contingencias y situaciones que la ley define.",
+      "c) La protección que ofrece el Sistema de la Seguridad Social también es de aplicación a personas que cumplan los requisitos exigidos en la modalidad no contributiva.",
+      "d) La protección que ofrece el Sistema de la Seguridad Social también es de aplicación a los familiares o asimilados que las personas beneficiarias tuvieran a su cargo."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "428. A EFECTOS DE LAS PRESTACIONES DE MODALIDAD CONTRIBUTIVA, ESTÁN INCLUIDOS DENTRO DEL CAMPO DE APLICACIÓN DEL SISTEMA DE LA SEGURIDAD SOCIAL, CUALQUIERA QUE SEA SU SEXO, ESTADO CIVIL O PROFESIÓN,",
+    "options": [
+      "a) Sólo los españoles que tengan su residencia en España, aunque estén trabajando permanentemente en el extranjero.",
+      "b) Las personas extranjeras que residan o se encuentren legalmente en España, siempre que el empleador tenga su domicilio fiscal en España.",
+      "c) Todos los españoles que residan en España, y los extranjeros que residan o se encuentren legalmente en España, siempre que, en el caso de estos últimos, ejerzan su actividad en territorio nacional.",
+      "d) Todos los españoles que residan en España, y los extranjeros que residan o se encuentren legalmente en España, siempre que, en ambos supuestos, ejerzan su actividad en territorio nacional."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "429. LOS CONVENIOS ESPECIALES QUE SE PUEDEN SUSCRIBIR CON LA SEGURIDAD SOCIAL:",
+    "options": [
+      "a) Con carácter general son un acuerdo suscrito voluntariamente por los trabajadores con la Tesorería General de la Seguridad Social para poder percibir una cuantía mayor en la jubilación.",
+      "b) Con carácter general es un acuerdo suscrito obligatoriamente por los trabajadores con la Tesorería General de la Seguridad Social con el fin de generar, mantener o ampliar, en determinadas situaciones, el derecho a las prestaciones de la Seguridad Social",
+      "c) En el convenio especial de empresas y trabajadores sujetos a expedientes de regulación de empleo que incluya a trabajadores de 55 o más años, la suscripción se ofrece voluntariamente por la Dirección Provincial de trabajo.",
+      "d) En el convenio especial de empresas y trabajadores sujetos a expedientes de regulación de empleo que incluya a trabajadores de 55 o más años, el acuerdo se suscribe por la empresa y el/la trabajador/a de una parte y la Tesorería General de la Seguridad Social de otra."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "430. INDIQUE CUAL DE LOS SIGUIENTES GRUPOS NO SE INCLUYE DENTRO DE LA MODALIDAD CONTRIBUTIVA A EFECTO DE PRESTACIONES DE LA SEGURIDAD SOCIAL:",
+    "options": [
+      "a) Trabajadores por cuenta propia o autónomos.",
+      "b) Socios trabajadores de cooperativas de trabajo asociado.",
+      "c) Personas que sólo trabajan en las labores de su hogar particular.",
+      "d) Estudiantes."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "431. EL CONVENIO ESPECIAL CON LA SEGURIDAD SOCIAL TENDRÁ COMO OBJETO LA COBERTURA DE LAS PRESTACIONES CORRESPONDIENTES A:",
+    "options": [
+      "a) Entre otras, Invalidez permanente, muerte y supervivencia, derivadas de enfermedad común y accidente laboral.",
+      "b) Entre otras, jubilación y servicios sociales.",
+      "c) Entre otras, Invalidez transitoria, muerte y supervivencia, derivadas de enfermedad común y accidente no laboral.",
+      "d) Entre otras, Invalidez permanente, muerte y supervivencia, derivadas de enfermedad profesional y accidente no laboral."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "432. SEÑALE LA AFIRMACIÓN CORRECTA:",
+    "options": [
+      "a) El plazo para la presentación de las solicitudes de alta en el Régimen General es de, como máximo, 3 días antes del inicio de la prestación.",
+      "b) El plazo para la presentación de las solicitudes de baja en el Régimen General es de, como máximo, 3 días antes del fin de la prestación.",
+      "c) El plazo para la presentación de las solicitudes de baja en el Régimen General es de, como máximo, 3 días posteriores al fin de la prestación.",
+      "d) El plazo para la presentación de las solicitudes de alta en el Régimen General es de, como máximo, hasta 3 días después del inicio de la prestación."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "433. A EFECTOS DE AFILIACIÓN AL SISTEMA DE LA SEGURIDAD SOCIAL, INDIQUE LA SITUACIÓN QUE NO ESTÁ CONSIDERADA COMO ASIMILADA AL ALTA:",
+    "options": [
+      "a) Situación legal de desempleo, total y subsidiado, y la de paro involuntario una vez agotada la prestación contributiva o asistencial, siempre que se mantenga la inscripción como desempleado en la Oficina de Empleo.",
+      "b) La excedencia forzosa.",
+      "c) La situación de excedencia para el cuidado de hijos con reserva de puesto de trabajo, de acuerdo con la legislación aplicable.",
+      "d) El desplazamiento del/de la trabajador/a fuera del territorio nacional tras un cambio voluntario de trabajo."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "434. ¿QUIÉNES SON LOS SUJETOS OBLIGADOS A LA COMUNICACIÓN DE LAS ALTAS, BAJAS Y VARIACIONES A LA SEGURIDAD SOCIAL EN EL RÉGIMEN GENERAL?",
+    "options": [
+      "a) La persona trabajadora, con el visto bueno de la parte empleadora",
+      "b) La parte empleadora firmará en todo caso esas comunicaciones, quedando a voluntad del/de la trabajador/a la firma de conformidad con dichas comunicaciones",
+      "c) La parte empleadora firmará y tramitará esas comunicaciones; las solicitudes de alta y variación de datos del trabajador por cuenta ajena deberán ir firmadas en todo caso por el trabajador.",
+      "d) El alta y la baja ha de tramitarse necesariamente por el empresario; las variaciones pueden ser tramitadas por los representantes de los trabajadores, si así está previsto en el correspondiente Convenio Colectivo de Empresa."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "435. SEÑALE LA AFIRMACIÓN CORRECTA:",
+    "options": [
+      "a) Cuando el  trabajador se traslade a un centro de trabajo del mismo empresario situado en diferente provincia, deberá promoverse la baja en la provincia de procedencia y el alta en la de destino.",
+      "b) A efectos de afiliación, no es necesario realizar ningún trámite ante la Seguridad Social cuando el/la trabajador/a se traslade a un centro de trabajo del mismo empresario situado en diferente provincia.",
+      "c) A efectos de afiliación a la Seguridad Social, cuando el/la trabajador/a se traslade a un centro de trabajo del mismo empresario situado en diferente provincia, el empresario ha de tramitar una solicitud de variación en los datos.",
+      "d) Corresponderá presentar una variación de datos cuando, por cualquier causa, proceda la adscripción del/de la trabajador/a a una cuenta de cotización distinta."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "436. CON CARÁCTER GENERAL, LOS EFECTOS DE LAS ALTAS SERÁN:",
+    "options": [
+      "a) Las altas presentadas con carácter previo a la prestación de los servicios únicamente surtirán efectos, en orden a los derechos y obligaciones inherentes a dicha situación, a partir del primer día del mes en el que se inicie la actividad.",
+      "b) Las altas presentadas fuera de plazo sólo tendrán efectos desde el día en que se formule la solicitud, salvo que se haya producido ingreso de cuotas en plazo reglamentario, en cuyo caso el alta retrotraerá sus efectos a la fecha en que se hayan ingresado las primeras cuotas correspondientes al trabajador de que se trate.",
+      "c) Las altas practicadas de oficio por las Direcciones Provinciales de la Tesorería General de la Seguridad Social o las Administraciones, tendrán sus efectos en la fecha en que las Resoluciones que las dicten adquieran firmeza.",
+      "d) Las altas presentadas con carácter previo a la prestación de los servicios únicamente surtirán efectos anticipados si la persona empleada asume la cotización correspondiente al plazo entre la fecha de la comunicación y la fecha en la que se inicie la actividad."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "437. SEÑALE LA OPCIÓN INCORRECTA. CON CARÁCTER GENERAL, LOS EFECTOS DE LAS BAJAS DE AFILIACIÓN:",
+    "options": [
+      "a) La baja del/de la trabajador/a producirá efectos desde el cese en la prestación de los servicios por cuenta ajena, en la actividad por cuenta propia o, en su caso, en la situación determinante de su inclusión en el Régimen de que se trate.",
+      "b) La solicitud de baja del/de la trabajador/a extinguirá la obligación de cotizar desde el cese en el trabajo.",
+      "c) Si la baja se solicita fuera de plazo, pero en los 5 días hábiles siguientes al cese en el trabajo, la obligación de cotizar se extingue en todo caso ese día de cese; pasado el quinto día, la obligación de cotizar se extingue en el día en que la Tesorería General de la Seguridad Social conozca el cese en el trabajo por cuenta ajena, o en la actividad por cuenta propia.",
+      "d) Cuando la Tesorería General de la Seguridad Social curse la baja de oficio, la obligación de cotizar se extinguirá desde el mismo día en que se haya llevado a cabo la actuación inspectora, o se hayan recibido los datos o documentos que acrediten el cese en el trabajo."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "438. DE LAS SIGUIENTES OPCIONES, INDIQUE LA QUE NO ES UNA PRESTACIÓN DE LA ACCIÓN PROTECTORA DE LA SEGURIDAD SOCIAL:",
+    "options": [
+      "a) Riesgo durante el embarazo.",
+      "b) Riesgo durante la lactancia artificial.",
+      "c) Nacimiento y cuidado de menor.",
+      "d) Cuidado de menores afectados por cáncer u otra enfermedad grave."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "439. INDIQUE LA OPCIÓN CORRECTA:",
+    "options": [
+      "a) La Seguridad Social incluye, entre sus prestaciones, la compensación de los gastos de sepelio",
+      "b) La Prestación temporal de viudedad de la Seguridad Social tiene una duración máxima de 1 año.",
+      "c) Las personas beneficiarias de la pensión de orfandad son los descendientes menores de edad, salvo que concurra una discapacidad, en cuyo caso pensión se mantiene hasta los 25 años.",
+      "d) La Seguridad Social prevé, en caso de muerte causada por accidente no laboral o enfermedad común, una indemnización a tanto alzado a determinados beneficiarios, además de la correspondiente pensión."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "440. SEÑALE LA OPCIÓN INCORRECTA. SEGÚN LA NORMATIVA DE LA SEGURIDAD SOCIAL, EL PERÍODO EN QUE SE PERMANEZCA EN LA SITUACIÓN DE EXCEDENCIA LABORAL PARA EL CUIDADO DEL MENOR A CARGO PRODUCE LOS SIGUIENTES EFECTOS:",
+    "options": [
+      "a) Será computable a efectos de antigüedad.",
+      "b) Se tendrá derecho a la asistencia a cursos de formación profesional.",
+      "c) A efecto de las prestaciones por desempleo, todo el período de excedencia tendrá la consideración de situación asimilada a la de alta.",
+      "d) Durante los seis primeros meses, el trabajador tendrá derecho a la reserva de su puesto de trabajo; si se trata de familias numerosas, de cualquier categoría, el plazo se amplía a los primeros 15 meses."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "441. DE CONFORMIDAD CON LO ESTABLECIDO EN LA LEY GENERAL DE LA SEGURIDAD SOCIAL, SE ENTIENDE SUSPENDIDA LA OBLIGACIÓN DE COTIZAR:",
+    "options": [
+      "a) Mientras el/la trabajador/a disfrute de un permiso sin sueldo.",
+      "b) En el supuesto de ejercicio del derecho de huelga por el/la trabajador/a.",
+      "c) Durante la situación de incapacidad temporal del/de la trabajador/a.",
+      "d) Todas las opciones anteriores son correctas."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "442. SEGÚN EL ARTÍCULO 42 DEL TEXTO REFUNDIDO DE LA LEY GENERAL DE LA SEGURIDAD SOCIAL (REAL DECRETO LEGISLATIVO 8/2015, DE 30 DE OCTUBRE), LA ACCIÓN PROTECTORA DEL SISTEMA DE LA SEGURIDAD SOCIAL COMPRENDE:",
+    "options": [
+      "a) La asistencia sanitaria en los casos de maternidad.",
+      "b) La asistencia sanitaria de enfermedad común o profesional.",
+      "c) La asistencia sanitaria de accidente, sea o no de trabajo.",
+      "d) Todas las opciones anteriores son correctas."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "445. AL RESPECTO DE MUFACE, INDIQUE LA AFIRMACIÓN INCORRECTA:",
+    "options": [
+      "a) Su ámbito de actuación de extiende al colectivo de Funcionarios Civiles y Militares del Estado y de otras Administraciones Públicas.",
+      "b) El reconocimiento de los derechos pasivos y la concesión de las pensiones de clases pasivas al personal funcionario, no es competencia de MUFACE.",
+      "c) El Ministerio de Inclusión, Seguridad Social y Migraciones gestiona el Régimen de Clases Pasivas.",
+      "d) Los derechos pasivos de aquellos mutualistas que ingresaron en la Administración a partir del 1 de enero de 2011 los gestiona el Instituto Nacional de la Seguridad Social, INSS."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "446. INDIQUE LA PRESTACIÓN QUE NO ES GESTIONADA POR MUFACE:",
+    "options": [
+      "a) Indemnizaciones por lesiones permanentes no invalidantes",
+      "b) Prestación económica por gran invalidez",
+      "c) Viudedad",
+      "d) La asistencia sanitaria y la farmacéutica, complementaria de la anterior."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "447. INDIQUE LA OPCIÓN CORRECTA:",
+    "options": [
+      "a) Las personas adscritas al Régimen de MUFACE tienen derecho a la asistencia sanitaria prestada por los servicios autonómicos de salud.",
+      "b) MUFACE tiene una red propia de hospitales y profesionales de la sanidad repartidos por toda la geografía del Estado Español.",
+      "c) Si existe concierto previo, las aseguradoras privadas pueden facilitan la asistencia sanitaria a mutualistas y beneficiarios de MUFACE.",
+      "d) MUFACE es la que indica a cada mutualista la entidad o aseguradora que ha de prestarle la asistencia sanitaria, en función de su rango de edad, así como de la Administración en la que presta servicios."
+    ],
+    "correct": 2
+  }
+];
+            let DOM = {};
+
+            const estado = {
+                preguntaActual: 0,
+                respuestasCorrectas: 0,
+                respuestasIncorrectas: 0,
+                totalPreguntas: preguntas.length
+            };
+
+            let botonesOpciones;
+            let indicesPreguntas;
+
+            function toggleClasses(element, addClass, removeClasses) {
+                if (removeClasses && removeClasses.length > 0) {
+                    removeClasses.forEach(cls => element.classList.remove(cls));
+                }
+                if (addClass) {
+                    element.classList.add(addClass);
+                }
+            }
+
+            function mostrarModal(message) {
+                DOM.modalMessage.textContent = message;
+                DOM.modalOverlay.classList.remove('hidden');
+            }
+
+            function ocultarModal() {
+                DOM.modalOverlay.classList.add('hidden');
+            }
+
+            function marcarRespuesta(index) {
+                const pregunta = preguntas[index];
+
+                const botonCorrecto = botonesOpciones[pregunta.correct];
+                const indiceCorrecto = indicesPreguntas[index];
+
+                toggleClasses(indiceCorrecto, null, ['correcta', 'incorrecta']);
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonCorrecto, 'correcta');
+
+                    if (pregunta.esCorrecta) {
+                        toggleClasses(indiceCorrecto, 'correcta');
+                    } else {
+                        const botonSeleccionado = botonesOpciones[pregunta.respuestaUsuario];
+                        toggleClasses(botonSeleccionado, 'incorrecta');
+                        toggleClasses(indiceCorrecto, 'incorrecta');
+                    }
+                }
+            }
+
+            function mostrarPregunta() {
+                DOM.resultadosFinales.classList.add('hidden');
+                DOM.contenidoPregunta.classList.remove('hidden');
+                DOM.rectanguloResumen.classList.remove('hidden');
+                DOM.finalizarBtn.textContent = 'Finalizar Test';
+
+                const pregunta = preguntas[estado.preguntaActual];
+                DOM.preguntaTexto.textContent = pregunta.question;
+
+                botonesOpciones.forEach((boton, index) => {
+                    toggleClasses(boton, null, ['seleccionada', 'correcta', 'incorrecta']);
+                    boton.textContent = pregunta.options[index];
+                    boton.disabled = pregunta.comprobada;
+                });
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonesOpciones[pregunta.respuestaUsuario], 'seleccionada');
+                    if (pregunta.comprobada) {
+                        marcarRespuesta(estado.preguntaActual);
+                    }
+                }
+
+                if (indicesPreguntas) {
+                    indicesPreguntas.forEach(indice => indice.classList.remove('activa'));
+                    indicesPreguntas[estado.preguntaActual].classList.add('activa');
+                }
+
+                DOM.comprobarBtn.classList.toggle('hidden', pregunta.comprobada);
+                actualizarEstadoBotones();
+            }
+
+            function manejarSeleccion(event) {
+                const boton = event.target.closest('.opcion');
+                if (boton) {
+                    const pregunta = preguntas[estado.preguntaActual];
+                    if (!pregunta.comprobada) {
+                        botonesOpciones.forEach(b => toggleClasses(b, null, ['seleccionada']));
+                        toggleClasses(boton, 'seleccionada');
+                        pregunta.respuestaUsuario = parseInt(boton.dataset.index);
+                    }
+                }
+            }
+
+            function comprobarRespuesta() {
+                const pregunta = preguntas[estado.preguntaActual];
+                if (pregunta.respuestaUsuario === null) {
+                    mostrarModal('Por favor, selecciona una respuesta antes de comprobar.');
+                    return;
+                }
+
+                pregunta.comprobada = true;
+                pregunta.esCorrecta = (pregunta.respuestaUsuario === pregunta.correct);
+
+                if (pregunta.esCorrecta) {
+                    estado.respuestasCorrectas++;
+                } else {
+                    estado.respuestasIncorrectas++;
+                }
+
+                marcarRespuesta(estado.preguntaActual);
+                actualizarResumen();
+
+                botonesOpciones.forEach(boton => boton.disabled = true);
+                DOM.comprobarBtn.classList.add('hidden');
+            }
+
+            function actualizarEstadoBotones() {
+                const esUltimaPregunta = estado.preguntaActual === estado.totalPreguntas - 1;
+                DOM.siguienteBtn.textContent = esUltimaPregunta ? 'Terminar' : 'Siguiente';
+            }
+
+            function siguientePregunta() {
+                if (estado.preguntaActual < estado.totalPreguntas - 1) {
+                    estado.preguntaActual++;
+                    mostrarPregunta();
+                } else {
+                    mostrarResultados();
+                }
+            }
+
+            function mostrarResultados() {
+                DOM.contenidoPregunta.classList.add('hidden');
+                DOM.resultadosFinales.classList.remove('hidden');
+
+                // Recalcular el recuento total acumulado
+                let correctas = 0;
+                let incorrectas = 0;
+                preguntas.forEach(p => {
+                    if (p.comprobada) {
+                        if (p.esCorrecta) correctas++;
+                        else incorrectas++;
+                    }
+                });
+
+                const correctasSpan = `<span class="resultados-finales-correctas">Correctas: ${correctas}</span>`;
+                const incorrectasSpan = `<span class="resultados-finales-incorrectas">Incorrectas: ${incorrectas}</span>`;
+                DOM.resultadosTexto.innerHTML = `${correctasSpan} | ${incorrectasSpan}`;
+
+                DOM.finalizarBtn.textContent = 'Volver al Test';
+            }
+
+            function crearIndices() {
+                DOM.indicesContenedor.innerHTML = Array.from(
+                    {length: estado.totalPreguntas},
+                    (_, i) => `<div class="indice-pregunta" data-index="${i}">${i+1}</div>`
+                ).join('');
+                indicesPreguntas = DOM.indicesContenedor.querySelectorAll('.indice-pregunta');
+            }
+
+            function manejarClickIndice(event) {
+                const indice = event.target.closest('.indice-pregunta');
+                if (indice) {
+                    estado.preguntaActual = parseInt(indice.dataset.index);
+                    mostrarPregunta();
+                }
+            }
+
+            function actualizarResumen() {
+                indicesPreguntas.forEach((indice, index) => {
+                    toggleClasses(indice, null, ['correcta', 'incorrecta']);
+                    const pregunta = preguntas[index];
+                    if (pregunta.comprobada) {
+                        if (pregunta.esCorrecta) {
+                            toggleClasses(indice, 'correcta');
+                        } else {
+                            toggleClasses(indice, 'incorrecta');
+                        }
+                    }
+                });
+            }
+
+            function toggleFinalizarTest() {
+                if (DOM.resultadosFinales.classList.contains('hidden')) {
+                    mostrarResultados();
+                } else {
+                    mostrarPregunta();
+                }
+            }
+
+            function cacheElements() {
+                return {
+                    preguntaTexto: document.getElementById('pregunta-texto'),
+                    opcionesContenedor: document.getElementById('opciones-contenedor'),
+                    siguienteBtn: document.getElementById('siguiente-btn'),
+                    comprobarBtn: document.getElementById('comprobar-btn'),
+                    indicesContenedor: document.getElementById('indices-contenedor'),
+                    contenedorTest: document.querySelector('section.contenedor-test'),
+                    rectanguloResumen: document.querySelector('footer.rectangulo-resumen'),
+                    modalOverlay: document.getElementById('custom-modal-overlay'),
+                    modalMessage: document.getElementById('custom-modal-message'),
+                    modalOkBtn: document.getElementById('custom-modal-ok'),
+                    contenidoPregunta: document.getElementById('contenido-pregunta'),
+                    resultadosFinales: document.getElementById('resultados-finales'),
+                    resultadosTexto: document.getElementById('resultados-texto'),
+                    finalizarBtn: document.getElementById('finalizar-btn')
+                };
+            }
+
+            function initData() {
+                preguntas = preguntas.map(p => ({
+                    ...p,
+                    respuestaUsuario: null,
+                    comprobada: false,
+                    esCorrecta: false
+                }));
+
+                const fragmentoOpciones = document.createDocumentFragment();
+                for (let i = 0; i < 4; i++) {
+                    const boton = document.createElement('button');
+                    boton.className = 'opcion';
+                    boton.dataset.index = i;
+                    fragmentoOpciones.appendChild(boton);
+                }
+                DOM.opcionesContenedor.appendChild(fragmentoOpciones);
+
+                botonesOpciones = Array.from(DOM.opcionesContenedor.querySelectorAll('.opcion'));
+
+                crearIndices();
+            }
+
+            function setupEvents() {
+                DOM.contenedorTest.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'siguiente-btn') {
+                        siguientePregunta();
+                    } else if (target.id === 'comprobar-btn') {
+                        comprobarRespuesta();
+                    } else if (target.classList.contains('opcion')) {
+                        manejarSeleccion(event);
+                    }
+                });
+
+                DOM.rectanguloResumen.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'finalizar-btn') {
+                        toggleFinalizarTest();
+                    } else if (target.classList.contains('indice-pregunta')) {
+                        manejarClickIndice(event);
+                    }
+                });
+
+                DOM.modalOkBtn.addEventListener('click', ocultarModal);
+            }
+
+            function init() {
+                DOM = cacheElements();
+                initData();
+                setupEvents();
+                mostrarPregunta();
+            }
+
+            init();
+        });
+    </script>
+
+    <script>
+        // Informa a la ventana padre (index.html) de la altura real de este
+        // contenido, para que el iframe que lo muestra se ajuste sin dejar
+        // hueco extra abajo. Se reenvía cada vez que cambia el contenido
+        // (cambio de pregunta, comprobar respuesta, finalizar test, etc.).
+        (function () {
+            function reportarAltura() {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage(
+                        { tipo: "alturaContenido", altura: document.documentElement.scrollHeight },
+                        "*"
+                    );
+                }
+            }
+            window.addEventListener("load", reportarAltura);
+            new MutationObserver(reportarAltura).observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+        })();
+    </script>
+</body>
+</html>

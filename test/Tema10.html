@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema10</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F0F0F0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 1;
+        }
+
+        section.contenedor-test, footer.rectangulo-resumen {
+            background-color: white;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        section.contenedor-test {
+            border: 1px solid #2b2a7f;
+        }
+
+        .titulo-test {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6c757d;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        .subtitulo-test {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0 0 20px 0;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .pregunta {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: left;
+            line-height: 1.5;
+        }
+        .opciones-contenedor {
+            display: grid;
+            gap: 2.5px;
+            margin-bottom: 25px;
+        }
+        .opcion {
+            background-color: white;
+            border: none;
+            color: #495057;
+            padding: 15px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s, border-color 0.2s;
+            text-align: left;
+        }
+        .opcion:hover {
+            background-color: #dee2e6;
+        }
+        .opcion.seleccionada {
+            background-color: #cce5ff;
+            border-color: #2b2a7f;
+            color: #004085;
+        }
+        .opcion.correcta {
+            background-color: #85d192;
+            border-color: #85d192;
+            color: #155724;
+            cursor: default;
+        }
+        .opcion.incorrecta {
+            background-color: #f0a1a8;
+            border-color: #f0a1a8;
+            color: #721c24;
+            cursor: default;
+        }
+        .opcion.correcta:hover, .opcion.incorrecta:hover {
+            background-color: #85d192;
+            color: #155724;
+            border-color: #85d192;
+        }
+        .opcion.incorrecta:hover {
+            background-color: #f0a1a8;
+            color: #721c24;
+            border-color: #f0a1a8;
+        }
+        .navegacion-btn-contenedor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .comprobar-btn, #finalizar-btn {
+            background-color: #cce5ff;
+            color: #004085;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .comprobar-btn:hover, #finalizar-btn:hover {
+            background-color: #b3d7ff;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .navegacion-btn {
+            background-color: #E0E0E0;
+            color: #555;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 2px;
+            font-size: 12px;
+            width: 100px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .navegacion-btn:hover {
+            background-color: #CFCFCF;
+        }
+        .navegacion-btn:disabled {
+            background-color: #f1f1f1;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        footer.rectangulo-resumen {
+            background-color: #F0F0F0;
+            padding: 20px;
+            border-radius: 2px;
+            width: 800px;
+            margin-top: 20px;
+            overflow-y: auto;
+        }
+        .indices-contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .indice-pregunta {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #495057;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .indice-pregunta.activa {
+            background-color: #cce5ff;
+            color: #004085;
+            border: none;
+        }
+        .indice-pregunta:hover {
+            background-color: #dee2e6;
+        }
+        .indice-pregunta.correcta {
+            background-color: #85d192;
+            color: #155724;
+        }
+        .indice-pregunta.incorrecta {
+            background-color: #f0a1a8;
+            color: #495057;
+        }
+
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .custom-modal {
+            background-color: white;
+            padding: 30px;
+            border-radius: 2px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .custom-modal h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .custom-modal button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .resultados-finales-container {
+            text-align: center;
+        }
+        .resultados-finales-texto {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .resultados-finales-correctas {
+            color: #155724;
+            font-weight: bold;
+        }
+        .resultados-finales-incorrectas {
+            color: #721c24;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 800px) {
+            section.contenedor-test, footer.rectangulo-resumen {
+                width: 95%;
+                padding: 15px;
+            }
+            .opcion {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <p class="subtitulo-test" style="text-align: justify;"><strong>Tema 10. Ley 39/2015, de 1 de octubre, del procedimiento administrativo común de las Administraciones Públicas.</strong> Ámbito subjetivo. Interesados en el procedimiento. Actividad de las Administraciones Públicas. Actos administrativos.</p>
+        <section class="contenedor-test">
+            <article id="contenido-pregunta">
+                <div class="pregunta" id="pregunta-texto"></div>
+                <div class="opciones-contenedor" id="opciones-contenedor"></div>
+                <div class="navegacion-btn-contenedor">
+                    <button id="comprobar-btn" class="comprobar-btn">Comprobar</button>
+                    <button id="siguiente-btn" class="navegacion-btn">Siguiente</button>
+                </div>
+            </article>
+            <div id="resultados-finales" class="hidden resultados-finales-container">
+                <h2>Resultados Finales</h2>
+                <div id="resultados-texto" class="resultados-finales-texto"></div>
+            </div>
+        </section>
+        <footer class="rectangulo-resumen" id="rectangulo-resumen">
+            <div class="indices-contenedor" id="indices-contenedor"></div>
+            <button id="finalizar-btn" class="comprobar-btn" style="width: 100%; margin-top: 20px;">Finalizar Test</button>
+        </footer>
+    </div>
+
+    <div id="custom-modal-overlay" class="custom-modal-overlay hidden">
+        <div class="custom-modal">
+            <p id="custom-modal-message"></p>
+            <button id="custom-modal-ok">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let preguntas = [
+  {
+    "question": "48. SEGÚN LA LEY 39/2015, DE 1 DE OCTUBRE, DEL PROCEDIMIENTO ADMINISTRATIVO COMÚN, ¿CUÁL DE LOS SIGUIENTES NO TIENE LA CONSIDERACIÓN DE PERSONA INTERESADA EN EL PROCEDIMIENTO ADMINISTRATIVO?",
+    "options": [
+      "a) Quienes lo promuevan como titulares de derechos o intereses legítimos individuales o colectivos",
+      "b) Aquellos/as cuyos intereses legítimos, individuales o colectivos, puedan resultar afectados por la resolución y se personen en el procedimiento en tanto no haya recaído resolución definitiva",
+      "c) Los/as que, sin haber iniciado el procedimiento, tengan derechos que puedan resultar afectados por la instrucción que en el mismo se adopte y comparezcan, exclusivamente de forma personal, ante la autoridad competente",
+      "d) Todas las respuestas son incorrectas"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "51. EL DERECHO Y OBLIGACIÓN DE RELACIONARSE ELECTRÓNICAMENTE CON LA ADMINISTRACIÓN, VIENE RECOGIDO EN EL:",
+    "options": [
+      "a) Art. 14 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, y por la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público.",
+      "b) Art. 14 de la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público.",
+      "c) Art. 15 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, y por la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público.",
+      "d) Ninguna de las respuestas anteriores es correcta."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "58. DE CONFORMIDAD CON LO ESTABLECIDO EN EL ARTÍCULO 35 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, NO NECESITAN NECESARIAMENTE SER MOTIVADOS:",
+    "options": [
+      "a) Los acuerdos de suspensión de actos.",
+      "b) Los actos sancionadores.",
+      "c) Los actos que se separen del dictamen de un órgano consultivo.",
+      "d) Los actos favorables para los interesados."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "63. SEGÚN LO DISPUESTO EN LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, COMO REGLA GENERAL, SEÑALE EN QUÉ LENGUA SE TRAMITARÁN LOS PROCEDIMIENTOS ADMINISTRATIVOS POR PARTE DE LA EHU",
+    "options": [
+      "a) En castellano",
+      "b) En castellano y en las demás lenguas cooficiales",
+      "c) En este supuesto el uso de la lengua se ajustará a lo previsto en la legislación autonómica correspondiente",
+      "d) En este supuesto el uso de la lengua será elegido por la EHU"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "66. ANTE LAS ADMINISTRACIONES PÚBLICAS, PODRÁN ACTUAR EN REPRESENTACIÓN DE OTRAS:",
+    "options": [
+      "a) Las personas físicas con o sin capacidad de obrar y las personas jurídicas, aunque no esté previsto en sus Estatutos.",
+      "b) Las personas físicas con capacidad de obrar y las personas jurídicas, siempre que ello esté previsto en sus Estatutos.",
+      "c) Las personas físicas con capacidad de obrar y las personas jurídicas, siempre que ello no esté previsto en sus Estatutos.",
+      "d) Las personas físicas con o sin capacidad de obrar y las personas jurídicas, siempre que ello esté previsto en sus Estatutos."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "68. SEGÚN LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, LOS REGISTROS ELECTRÓNICOS DE TODAS Y CADA UNA DE LAS ADMINISTRACIONES DEBEN CUMPLIR UNA CARACTERÍSTICA ESENCIAL:",
+    "options": [
+      "a) Que sean técnicamente intercambiables, de modo que se garantice su compatibilidad informática e interconexión, así como la transmisión telemática de los asientos registrales y de los documentos que se presenten en cualquiera de los registros.",
+      "b) Que deberán ser plenamente interoperables, de modo que se garantice su compatibilidad informática e interconexión, así como la transmisión telemática de los asientos registrales y de los documentos que se presenten en cualquiera de los registros.",
+      "c) Que sean plenamente interoperables, con independencia de su compatibilidad informática",
+      "d) Que estén normalizados según la norma UNE-EN ISO 19160-4:2017."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "69. DE ACUERDO CON LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, ¿EN QUÉ PROCEDIMIENTO TIENEN LAS ADMINISTRACIONES PÚBLICAS OBLIGACIÓN DE RESOLVER?",
+    "options": [
+      "a) Especialmente en todos los procedimientos que se inicien de oficio por denuncia.",
+      "b) Como regla general, en todos los procedimientos que se inicien de oficio.",
+      "c) En todos los procedimientos cualquiera que sea su forma de iniciación.",
+      "d) Sólo en los procedimientos sancionadores, con independencia de su forma de finalización."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "70. SEGÚN EL ARTÍCULO 40 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, ¿CUÁL ES EL PLAZO DE NOTIFICACIÓN DE LOS ACTOS ADMINISTRATIVOS DESDE QUE SON DICTADOS?",
+    "options": [
+      "a) 7 días",
+      "b) 10 días",
+      "c) 15 días",
+      "d) 20 días"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "71. SEGÚN EL ARTÍCULO 41 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, LAS NOTIFICACIONES SE PRACTICARÁN PREFERENTEMENTE:",
+    "options": [
+      "a) Por la vía postal",
+      "b) Por la vía telefónica",
+      "c) Por medios electrónicos",
+      "d) Por el medio más rápido y económico para la Administración"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "72. SEGÚN LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, LAS RESOLUCIONES ADMINISTRATIVAS QUE VULNEREN LO ESTABLECIDO EN UNA DISPOSICIÓN REGLAMENTARIA SON:",
+    "options": [
+      "a) Válidas",
+      "b) Nulas",
+      "c) Anulables",
+      "d) Convalidables"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "73. SEGÚN EL ARTÍCULO 21 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, ¿CUÁL ES EL PLAZO DE NOTIFICACIÓN DE LA RESOLUCIÓN EXPRESA, SI EL PROCEDIMIENTO TIENE NORMA REGULADORA ESPECÍFICA PERO NO FIJA EL PLAZO?",
+    "options": [
+      "a) En el plazo fijado por la norma reguladora específica de una materia afín",
+      "b) En el plazo de 3 meses",
+      "c) En el plazo de 6 meses",
+      "d) En el plazo de 1 año"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "74. SEGÚN LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, LOS ACTOS ADMINISTRATIVOS PRODUCIDOS POR SILENCIO ADMINISTRATIVO PUEDEN HACERSE VALER ANTE:",
+    "options": [
+      "a) Exclusivamente ante la Administración instructora del expediente",
+      "b) Ante la Administración, así como ante cualquier persona física o jurídica, pública o privada",
+      "c) Sólo ante personas físicas",
+      "d) Sólo ante personas físicas o jurídicas públicas"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "75. EL ARTÍCULO 35 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, ESTABLECE QUE SERÁN MOTIVADOS, CON SUCINTA REFERENCIA DE HECHOS Y FUNDAMENTOS DE DERECHO:",
+    "options": [
+      "a) Los que resuelvan procedimientos de revisión de oficio de disposiciones o actos administrativos",
+      "b) Los que resuelvan recursos administrativos",
+      "c) Los que resuelvan procedimientos de arbitraje",
+      "d) Todas las anteriores son correctas"
+    ],
+    "correct": 3
+  },
+  {
+    "question": "77. LA COMPARECENCIA DE LOS/AS CIUDADANOS/AS ANTE LAS OFICINAS PÚBLICAS, YA SEA PRESENCIALMENTE O POR MEDIOS ELECTRÓNICOS, SÓLO SERÁ OBLIGATORIA:",
+    "options": [
+      "a) Cuando razones de interés público así lo aconsejen",
+      "b) Cuando esté previsto en una norma con rango de Ley",
+      "c) Cuando se crea oportuno para resolver un expediente",
+      "d) Nunca"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "78. ¿CUÁNDO SE ENTIENDE PRACTICADA UNA NOTIFICACIÓN DE UN ACTO ADMINISTRATIVO POR MEDIOS ELECTRÓNICOS?",
+    "options": [
+      "a) Cuando se reciba en la bandeja de entrada del correo electrónico de la persona interesada",
+      "b) Cuando se produzca el acceso a su contenido mediante comparecencia en la sede electrónica de la Administración u Organismo actuante",
+      "c) Cuando se curse desde cualquiera de las aplicaciones informáticas de la Administración u Organismo actuante",
+      "d) Ninguna de las anteriores es correcta"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "141. LOS ACTOS ADMINISTRATIVOS SUJETOS A DERECHO ADMINISTRATIVO:",
+    "options": [
+      "a) Se presumen válidos.",
+      "b) Se presumen expresos.",
+      "c) Se presumen desfavorables.",
+      "d) Se presumen motivados."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "157. LA LEY 39/2015, DE 1 DE OCTUBRE, DEL PROCEDIMIENTO ADMINISTRATIVO COMÚN DE LAS ADMINISTRACIONES PÚBLICAS SE APLICA AL SECTOR PÚBLICO QUE COMPRENDE…",
+    "options": [
+      "a) La Administración General del Estado y las Administraciones de las Comunidades Autónomas.",
+      "b) La Administración General del Estado y las Entidades que integran la Administración Local y el sector público institucional.",
+      "c) Las Administraciones de las Comunidades Autónomas, las Entidades que integran la Administración Local y el sector público institucional.",
+      "d) La Administración General del Estado, las Administraciones de las Comunidades Autónomas, las Entidades que integran la Administración Local y el sector público institucional."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "165. LOS ACTOS ADMINISTRATIVOS PRODUCIDOS POR SILENCIO ADMINISTRATIVO SE DENOMINAN:",
+    "options": [
+      "a) Resoluciones.",
+      "b) Actos de gravamen.",
+      "c) Actos desfavorables.",
+      "d) Actos presuntos."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "166. LOS ACTOS ADMINISTRATIVOS QUE PONEN FIN A UN PROCEDIMIENTO SE DENOMINAN:",
+    "options": [
+      "a) Actos de trámite.",
+      "b) Resoluciones.",
+      "c) Recusaciones.",
+      "d) Recursos."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "167. ¿EN CUÁL DE LOS SIGUIENTES SUPUESTOS NO SE PODRÁ OTORGAR EFICACIA RETROACTIVA A UN ACTO ADMINISTRATIVO?",
+    "options": [
+      "a) Cuando se trate de una resolución.",
+      "b) Cuando se trate de un acto sancionador.",
+      "c) Cuando produzca efectos favorables al interesado.",
+      "d) Los actos administrativos siempre pueden tener efectos retroactivos."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "225. (SEÑALE LA RESPUESTA INCORRECTA). SEGÚN EL ARTÍCULO 11.2 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DEL PROCEDIMIENTO ADMINISTRATIVO COMÚN, ES OBLIGATORIA LA FIRMA POR PARTE DE LOS/AS INTERESADOS/AS PARA…",
+    "options": [
+      "a) Formular solicitudes.",
+      "b) Presentar declaraciones responsables o comunicaciones.",
+      "c) Firmar acuse de recibo en las notificaciones electrónicas.",
+      "d) Renunciar a derechos."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "241. LOS ACTOS ADMINISTRATIVOS PRODUCEN EFECTOS DESDE LA FECHA EN QUE SE DICTEN, SIN EMBARGO, SU EFICACIA QUEDARÁ DEMORADA:",
+    "options": [
+      "a) Cuando sea necesaria la notificación o publicación del acto, supuesto en el cual el acto no será eficaz hasta que se realice correctamente la notificación o publicación.",
+      "b) Cuando el destinatario del acto no esté de acuerdo con su contenido.",
+      "c) Cuando produzcan efectos desfavorables para la persona interesada.",
+      "d) Los actos administrativos siempre son eficaces desde que se dictan, sin que tal eficacia pueda quedar demorada en ningún caso."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "244. DE CONFORMIDAD CON LO ESTABLECIDO EN EL ARTÍCULO 35 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, HAN DE SER MOTIVADOS:",
+    "options": [
+      "a) Los actos que resuelvan recursos administrativos.",
+      "b) Los actos que limiten derechos o intereses legítimos.",
+      "c) Los actos que se separen del criterio seguido en actuaciones precedentes.",
+      "d) Todas las respuestas anteriores son correctas."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "245. LAS NOTIFICACIONES DE LOS ACTOS ADMINISTRATIVOS DEBERÁN CONTENER:",
+    "options": [
+      "a) El texto íntegro del acto o resolución",
+      "b) Un resumen detallado del acto o resolución",
+      "c) La parte del acto o resolución que pueda afectar a quien se notifica",
+      "d) Únicamente es necesario que contenga el recurso que se puede interponer contra el acto notificado."
+    ],
+    "correct": 0
+  },
+  {
+    "question": "246. SI UN/A INTERESADO/A RECHAZA LA NOTIFICACIÓN DE UN ACTO ADMINISTRATIVO:",
+    "options": [
+      "a) Se le intentará notificar nuevamente, dentro de los 3 días siguientes, a una hora distinta",
+      "b) Se dará por efectuado el trámite y se continuará el procedimiento",
+      "c) Se le publicará en el Boletín Oficial del Estado, de la Comunidad Autónoma o de la Provincia, según cuál sea la Administración de la que procede el acto a notificar",
+      "d) Se le hará por medio de edicto en el tablón de anuncios del Ayuntamiento de su último domicilio."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "247. SE DEBERÁN NOTIFICAR LAS RESOLUCIONES Y ACTOS ADMINISTRATIVOS A:",
+    "options": [
+      "a) Todos/as los/as administrados/as",
+      "b) Las personas interesadas cuyos derechos e intereses se vean afectados por dichos actos y resoluciones",
+      "c) Quién previamente lo haya solicitado",
+      "d) Los/as funcionarios/as de la Administración que han dictado el acto"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "248. LAS NOTIFICACIONES DE UN ACTO ADMINISTRATIVO SE HARÁ EN UN BOLETÍN OFICIAL CUANDO:",
+    "options": [
+      "a) Los/as interesados/as sean desconocidos/as.",
+      "b) Se ignore el lugar donde ha de practicarse la notificación",
+      "c) Se ha intentado la notificación, pero no se ha podido practicar.",
+      "d) Todas las respuestas anteriores son correctas."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "249. REÚNE LA CONDICIÓN DE PERSONA INTERESADA:",
+    "options": [
+      "a) Toda aquella que presenta un escrito dirigido a la Administración.",
+      "b) Toda aquella que interpone un recurso administrativo.",
+      "c) Cualquier ciudadano/a.",
+      "d) Toda aquella que, sin haber iniciado el procedimiento, tenga derechos que puedan resultar afectados por la decisión que se adopte en el mismo."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "250. SI VARIAS PERSONAS INTERESADAS FIRMAN UNA SOLICITUD, LAS ACTUACIONES SE ENTENDERÁN:",
+    "options": [
+      "a) Con la que ostente mayor interés",
+      "b) Con toda ellas.",
+      "c) Siempre con la que figure en primer lugar.",
+      "d) Con la persona representante o interesada que expresamente designen."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "260. ¿PUEDE LA ADMINISTRACIÓN CONVALIDAR LOS ACTOS ANULABLES?",
+    "options": [
+      "a) No, en ningún caso.",
+      "b) Sí, subsanando los vicios de que adolezcan.",
+      "c) Sí, pero únicamente se pueden convalidar cuando el motivo de anulabilidad sea un defecto de forma.",
+      "d) No, únicamente cabe la convalidación de actos nulos."
+    ],
+    "correct": 1
+  },
+  {
+    "question": "261. EN UN PROCEDIMIENTO INICIADO A SOLICITUD DE LA PERSONA INTERESADA, EL VENCIMIENTO DEL PLAZO MÁXIMO SIN HABERSE NOTIFICADO RESOLUCIÓN EXPRESA LEGITIMA A LA PERSONA INTERESADA PARA:",
+    "options": [
+      "a) Entender siempre estimada su solicitud.",
+      "b) Entender siempre desestimada su solicitud.",
+      "c) Entender caducado el procedimiento.",
+      "d) Entender su solicitud estimada o desestimada, según proceda."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "262. ¿CUÁLES SON LOS EFECTOS DE LA DESESTIMACIÓN DE UNA SOLICITUD POR SILENCIO ADMINISTRATIVO?",
+    "options": [
+      "a) Tiene el efecto de exonerar a la Administración de la obligación de resolver.",
+      "b) Tiene los mismos efectos que una resolución expresa desestimatoria.",
+      "c) Tiene los mismos efectos que un acto de trámite cualificado.",
+      "d) Tiene los solos efectos de permitir a las personas interesadas la interposición del recurso administrativo o contencioso-administrativo que resulte procedente."
+    ],
+    "correct": 3
+  },
+  {
+    "question": "266. SEGÚN LA LEY 39/2015,  LOS/AS CIUDADANOS/AS TIENEN DERECHO A:",
+    "options": [
+      "a) Obtener copia de los documentos que presenten, quedando, en todo caso, los originales en el procedimiento de que se trate",
+      "b) Obtener copia cotejada de los documentos que presenten, quedando, en todo caso, los originales en el procedimiento de que se trate",
+      "c) A obtener copia de los documentos contenidos en los procedimientos en los que tengan la condición de interesados",
+      "d) Ninguna de las anteriores respuestas es correcta."
+    ],
+    "correct": 2
+  },
+  {
+    "question": "267. SEGÚN LA LEY 39/2015, DE 1 DE OCTUBRE, LOS/AS CIUDADANOS/AS TIENEN DERECHO A:",
+    "options": [
+      "a) Identificar a las autoridades y al personal al servicio de las Administraciones Públicas bajo cuya responsabilidad se tramiten los procedimientos",
+      "b) No presentar documentos no exigidos por las normas aplicables al procedimiento de que se trate",
+      "c) Ser tratados con respeto y deferencia por autoridades y funcionariado, que habrán de facilitarles el ejercicio de sus derechos y el cumplimiento de sus obligaciones",
+      "d) Todas las respuestas anteriores son correctas"
+    ],
+    "correct": 3
+  },
+  {
+    "question": "270. EL ARTÍCULO 13 DE LA LEY 39/2015, DE 1 DE OCTUBRE, DE PROCEDIMIENTO ADMINISTRATIVO COMÚN, RECOGE ENTRE LOS DERECHOS DE LAS PERSONAS EN SUS RELACIONES CON LAS ADMINISTRACIONES PÚBLICAS:",
+    "options": [
+      "a) A ser asistidos en el uso de medios electrónicos",
+      "b) A utilizar las lenguas oficiales de la comunidad autónoma.",
+      "c) A acceder a los registros y documentos.",
+      "d) Todas las respuestas son correctas"
+    ],
+    "correct": 3
+  },
+  {
+    "question": "313. ¿QUÉ DEBE CONSIGNAR UN REGISTRO GENERAL DE UN ORGANISMO PÚBLICO CUANDO RECIBE UNA NOTIFICACIÓN?",
+    "options": [
+      "a) Firma de la persona funcionaria que la recibe y sello oficial",
+      "b) Nombre de la persona funcionaria que recibe la notificación, firma de la misma, DNI y fecha",
+      "c) Únicamente es necesario el sello del Organismo",
+      "d) Firma de la persona funcionaria que recibe la notificación"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "314. ¿EN QUE PLAZO SE DEBE REALIZAR EL 2º INTENTO DE ENTREGA DE UNA NOTIFICACIÓN?",
+    "options": [
+      "a) En los tres días siguientes al primer intento y en hora distinta",
+      "b) Al día siguiente del primer intento y hora distinta",
+      "c) A los dos días del primer intento y en hora distinta",
+      "d) Al tercer día del primer intento y en hora distinta"
+    ],
+    "correct": 0
+  }
+];
+            let DOM = {};
+
+            const estado = {
+                preguntaActual: 0,
+                respuestasCorrectas: 0,
+                respuestasIncorrectas: 0,
+                totalPreguntas: preguntas.length
+            };
+
+            let botonesOpciones;
+            let indicesPreguntas;
+
+            function toggleClasses(element, addClass, removeClasses) {
+                if (removeClasses && removeClasses.length > 0) {
+                    removeClasses.forEach(cls => element.classList.remove(cls));
+                }
+                if (addClass) {
+                    element.classList.add(addClass);
+                }
+            }
+
+            function mostrarModal(message) {
+                DOM.modalMessage.textContent = message;
+                DOM.modalOverlay.classList.remove('hidden');
+            }
+
+            function ocultarModal() {
+                DOM.modalOverlay.classList.add('hidden');
+            }
+
+            function marcarRespuesta(index) {
+                const pregunta = preguntas[index];
+
+                const botonCorrecto = botonesOpciones[pregunta.correct];
+                const indiceCorrecto = indicesPreguntas[index];
+
+                toggleClasses(indiceCorrecto, null, ['correcta', 'incorrecta']);
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonCorrecto, 'correcta');
+
+                    if (pregunta.esCorrecta) {
+                        toggleClasses(indiceCorrecto, 'correcta');
+                    } else {
+                        const botonSeleccionado = botonesOpciones[pregunta.respuestaUsuario];
+                        toggleClasses(botonSeleccionado, 'incorrecta');
+                        toggleClasses(indiceCorrecto, 'incorrecta');
+                    }
+                }
+            }
+
+            function mostrarPregunta() {
+                DOM.resultadosFinales.classList.add('hidden');
+                DOM.contenidoPregunta.classList.remove('hidden');
+                DOM.rectanguloResumen.classList.remove('hidden');
+                DOM.finalizarBtn.textContent = 'Finalizar Test';
+
+                const pregunta = preguntas[estado.preguntaActual];
+                DOM.preguntaTexto.textContent = pregunta.question;
+
+                botonesOpciones.forEach((boton, index) => {
+                    toggleClasses(boton, null, ['seleccionada', 'correcta', 'incorrecta']);
+                    boton.textContent = pregunta.options[index];
+                    boton.disabled = pregunta.comprobada;
+                });
+
+                if (pregunta.respuestaUsuario !== null) {
+                    toggleClasses(botonesOpciones[pregunta.respuestaUsuario], 'seleccionada');
+                    if (pregunta.comprobada) {
+                        marcarRespuesta(estado.preguntaActual);
+                    }
+                }
+
+                if (indicesPreguntas) {
+                    indicesPreguntas.forEach(indice => indice.classList.remove('activa'));
+                    indicesPreguntas[estado.preguntaActual].classList.add('activa');
+                }
+
+                DOM.comprobarBtn.classList.toggle('hidden', pregunta.comprobada);
+                actualizarEstadoBotones();
+            }
+
+            function manejarSeleccion(event) {
+                const boton = event.target.closest('.opcion');
+                if (boton) {
+                    const pregunta = preguntas[estado.preguntaActual];
+                    if (!pregunta.comprobada) {
+                        botonesOpciones.forEach(b => toggleClasses(b, null, ['seleccionada']));
+                        toggleClasses(boton, 'seleccionada');
+                        pregunta.respuestaUsuario = parseInt(boton.dataset.index);
+                    }
+                }
+            }
+
+            function comprobarRespuesta() {
+                const pregunta = preguntas[estado.preguntaActual];
+                if (pregunta.respuestaUsuario === null) {
+                    mostrarModal('Por favor, selecciona una respuesta antes de comprobar.');
+                    return;
+                }
+
+                pregunta.comprobada = true;
+                pregunta.esCorrecta = (pregunta.respuestaUsuario === pregunta.correct);
+
+                if (pregunta.esCorrecta) {
+                    estado.respuestasCorrectas++;
+                } else {
+                    estado.respuestasIncorrectas++;
+                }
+
+                marcarRespuesta(estado.preguntaActual);
+                actualizarResumen();
+
+                botonesOpciones.forEach(boton => boton.disabled = true);
+                DOM.comprobarBtn.classList.add('hidden');
+            }
+
+            function actualizarEstadoBotones() {
+                const esUltimaPregunta = estado.preguntaActual === estado.totalPreguntas - 1;
+                DOM.siguienteBtn.textContent = esUltimaPregunta ? 'Terminar' : 'Siguiente';
+            }
+
+            function siguientePregunta() {
+                if (estado.preguntaActual < estado.totalPreguntas - 1) {
+                    estado.preguntaActual++;
+                    mostrarPregunta();
+                } else {
+                    mostrarResultados();
+                }
+            }
+
+            function mostrarResultados() {
+                DOM.contenidoPregunta.classList.add('hidden');
+                DOM.resultadosFinales.classList.remove('hidden');
+
+                // Recalcular el recuento total acumulado
+                let correctas = 0;
+                let incorrectas = 0;
+                preguntas.forEach(p => {
+                    if (p.comprobada) {
+                        if (p.esCorrecta) correctas++;
+                        else incorrectas++;
+                    }
+                });
+
+                const correctasSpan = `<span class="resultados-finales-correctas">Correctas: ${correctas}</span>`;
+                const incorrectasSpan = `<span class="resultados-finales-incorrectas">Incorrectas: ${incorrectas}</span>`;
+                DOM.resultadosTexto.innerHTML = `${correctasSpan} | ${incorrectasSpan}`;
+
+                DOM.finalizarBtn.textContent = 'Volver al Test';
+            }
+
+            function crearIndices() {
+                DOM.indicesContenedor.innerHTML = Array.from(
+                    {length: estado.totalPreguntas},
+                    (_, i) => `<div class="indice-pregunta" data-index="${i}">${i+1}</div>`
+                ).join('');
+                indicesPreguntas = DOM.indicesContenedor.querySelectorAll('.indice-pregunta');
+            }
+
+            function manejarClickIndice(event) {
+                const indice = event.target.closest('.indice-pregunta');
+                if (indice) {
+                    estado.preguntaActual = parseInt(indice.dataset.index);
+                    mostrarPregunta();
+                }
+            }
+
+            function actualizarResumen() {
+                indicesPreguntas.forEach((indice, index) => {
+                    toggleClasses(indice, null, ['correcta', 'incorrecta']);
+                    const pregunta = preguntas[index];
+                    if (pregunta.comprobada) {
+                        if (pregunta.esCorrecta) {
+                            toggleClasses(indice, 'correcta');
+                        } else {
+                            toggleClasses(indice, 'incorrecta');
+                        }
+                    }
+                });
+            }
+
+            function toggleFinalizarTest() {
+                if (DOM.resultadosFinales.classList.contains('hidden')) {
+                    mostrarResultados();
+                } else {
+                    mostrarPregunta();
+                }
+            }
+
+            function cacheElements() {
+                return {
+                    preguntaTexto: document.getElementById('pregunta-texto'),
+                    opcionesContenedor: document.getElementById('opciones-contenedor'),
+                    siguienteBtn: document.getElementById('siguiente-btn'),
+                    comprobarBtn: document.getElementById('comprobar-btn'),
+                    indicesContenedor: document.getElementById('indices-contenedor'),
+                    contenedorTest: document.querySelector('section.contenedor-test'),
+                    rectanguloResumen: document.querySelector('footer.rectangulo-resumen'),
+                    modalOverlay: document.getElementById('custom-modal-overlay'),
+                    modalMessage: document.getElementById('custom-modal-message'),
+                    modalOkBtn: document.getElementById('custom-modal-ok'),
+                    contenidoPregunta: document.getElementById('contenido-pregunta'),
+                    resultadosFinales: document.getElementById('resultados-finales'),
+                    resultadosTexto: document.getElementById('resultados-texto'),
+                    finalizarBtn: document.getElementById('finalizar-btn')
+                };
+            }
+
+            function initData() {
+                preguntas = preguntas.map(p => ({
+                    ...p,
+                    respuestaUsuario: null,
+                    comprobada: false,
+                    esCorrecta: false
+                }));
+
+                const fragmentoOpciones = document.createDocumentFragment();
+                for (let i = 0; i < 4; i++) {
+                    const boton = document.createElement('button');
+                    boton.className = 'opcion';
+                    boton.dataset.index = i;
+                    fragmentoOpciones.appendChild(boton);
+                }
+                DOM.opcionesContenedor.appendChild(fragmentoOpciones);
+
+                botonesOpciones = Array.from(DOM.opcionesContenedor.querySelectorAll('.opcion'));
+
+                crearIndices();
+            }
+
+            function setupEvents() {
+                DOM.contenedorTest.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'siguiente-btn') {
+                        siguientePregunta();
+                    } else if (target.id === 'comprobar-btn') {
+                        comprobarRespuesta();
+                    } else if (target.classList.contains('opcion')) {
+                        manejarSeleccion(event);
+                    }
+                });
+
+                DOM.rectanguloResumen.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target.id === 'finalizar-btn') {
+                        toggleFinalizarTest();
+                    } else if (target.classList.contains('indice-pregunta')) {
+                        manejarClickIndice(event);
+                    }
+                });
+
+                DOM.modalOkBtn.addEventListener('click', ocultarModal);
+            }
+
+            function init() {
+                DOM = cacheElements();
+                initData();
+                setupEvents();
+                mostrarPregunta();
+            }
+
+            init();
+        });
+    </script>
+
+    <script>
+        // Informa a la ventana padre (index.html) de la altura real de este
+        // contenido, para que el iframe que lo muestra se ajuste sin dejar
+        // hueco extra abajo. Se reenvía cada vez que cambia el contenido
+        // (cambio de pregunta, comprobar respuesta, finalizar test, etc.).
+        (function () {
+            function reportarAltura() {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage(
+                        { tipo: "alturaContenido", altura: document.documentElement.scrollHeight },
+                        "*"
+                    );
+                }
+            }
+            window.addEventListener("load", reportarAltura);
+            new MutationObserver(reportarAltura).observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+        })();
+    </script>
+</body>
+</html>
