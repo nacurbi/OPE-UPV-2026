@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPV/EHU – Oferta Pública de Empleo 2023-2024 (GRUPO C1 - ESCALA ADMINISTRATIVA)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F0F0F0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .contenedor-principal {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* Layout de 2 Columnas */
+        .layout-dos-columnas {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Columna Izquierda: Menú / Acceso Rápido */
+        .columna-indice {
+            background-color: #F0F0F0;
+            border-radius: 4px;
+            padding: 0;
+        }
+
+
+        .lista-indice {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 5px;
+        }
+
+        .enlace-bloque {
+            display: block;
+            padding: 5px 6px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 3px;
+            color: #004085;
+            text-decoration: none;
+            font-size: 13px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .enlace-bloque:hover {
+            background-color: #cce5ff;
+            border-color: #2b2a7f;
+        }
+
+        /* Bloque activo (más oscuro) */
+        .enlace-bloque.activo,
+        .enlace-bloque.activo:hover {
+            background-color: #2b2a7f;
+            border-color: #2b2a7f;
+            color: #ffffff;
+        }
+
+        /* Columna Derecha: Contenido de Temas */
+        .columna-contenido {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tarjeta-bloque {
+            background-color: #ffffff;
+            border: 1px solid #2b2a7f;
+            border-radius: 4px;
+            padding: 15px 20px;
+            scroll-margin-top: 130px;
+        }
+
+        .cabecera-bloque {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eef0fb;
+        }
+
+        .titulo-bloque {
+            font-size: 15px;
+            font-weight: bold;
+            color: #2b2a7f;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .boton-iniciar {
+            background-color: #2b2a7f;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .boton-iniciar:hover {
+            background-color: #004085;
+        }
+
+        .lista-temas {
+            margin: 0;
+            padding-left: 18px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .lista-temas li {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .lista-temas li:last-child {
+            margin-bottom: 0;
+        }
+
+        .lista-temas strong {
+            color: #000;
+        }
+
+        .sin-preguntas {
+            color: red;
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        /* Iframe de contenido (columna derecha) */
+        .marco-contenido {
+            width: 100%;
+            height: 80vh;
+            display: block;
+            border: none;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        /* Enlaces del índice sin test asignado */
+        .enlace-bloque-inactivo {
+            color: #a36868;            
+    	    background-color: #fbf0f0; 
+            border-color: #ebd5d5;
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-principal">
+
+        <div class="layout-dos-columnas">
+            
+            <!-- COLUMNA IZQUIERDA: ÍNDICE DE TEMAS -->
+            <nav class="columna-indice">
+                <ul class="lista-indice">
+                    <li><a href="test/bloque1.html" target="marco-contenido" class="enlace-bloque">Bloque 1</a></li>
+                    <li><a href="test/bloque2.html" target="marco-contenido" class="enlace-bloque">Bloque 2</a></li>
+                    <li><a href="test/bloque3.html" target="marco-contenido" class="enlace-bloque">Bloque 3</a></li>
+                    <li><a href="test/bloque4.html" target="marco-contenido" class="enlace-bloque">Bloque 4</a></li>
+                    <li><a href="test/bloque5.html" target="marco-contenido" class="enlace-bloque">Bloque 5</a></li>
+                    <li><a href="test/bloque6.html" target="marco-contenido" class="enlace-bloque">Bloque 6</a></li>
+                    <li><a href="test/bloque7.html" target="marco-contenido" class="enlace-bloque">Bloque 7</a></li>
+                    <li><a href="test/bloque8.html" target="marco-contenido" class="enlace-bloque">Bloque 8</a></li>
+                    <li><a href="test/bloque9.html" target="marco-contenido" class="enlace-bloque">Bloque 9</a></li>
+                    <li><a href="test/bloque10.html" target="marco-contenido" class="enlace-bloque">Bloque 10</a></li>
+                    <li><a href="test/bloque11.html" target="marco-contenido" class="enlace-bloque">Bloque 11</a></li>
+                    <li><a href="test/bloque12.html" target="marco-contenido" class="enlace-bloque">Bloque 12</a></li>
+                    <li><a href="test/bloque13.html" target="marco-contenido" class="enlace-bloque">Bloque 13</a></li>
+                    <li><a href="test/bloque14.html" target="marco-contenido" class="enlace-bloque">Bloque 14</a></li>
+                    <li><a href="test/bloque15.html" target="marco-contenido" class="enlace-bloque">Bloque 15</a></li>
+                    <li><a href="test/bloque16.html" target="marco-contenido" class="enlace-bloque">Bloque 16</a></li>
+                    <li><a href="test/bloque17.html" target="marco-contenido" class="enlace-bloque">Bloque 17</a></li>
+                    <li><a href="test/bloque18.html" target="marco-contenido" class="enlace-bloque">Bloque 18</a></li>
+                    <li><a href="test/bloque19.html" target="marco-contenido" class="enlace-bloque">Bloque 19</a></li>
+                    <li><a href="test/bloque20.html" target="marco-contenido" class="enlace-bloque">Bloque 20</a></li>
+                    <li><a href="test/bloque21.html" target="marco-contenido" class="enlace-bloque">Bloque 21</a></li>
+                    <li><a href="test/bloque22.html" target="marco-contenido" class="enlace-bloque">Bloque 22</a></li>
+                    <li><a href="test/bloque23.html" target="marco-contenido" class="enlace-bloque">Bloque 23</a></li>
+                    <li><a href="test/bloque24.html" target="marco-contenido" class="enlace-bloque">Bloque 24</a></li>
+                    <li><a href="test/bloque25.html" target="marco-contenido" class="enlace-bloque">Bloque 25</a></li>
+                    <li><a href="test/bloque26.html" target="marco-contenido" class="enlace-bloque">Bloque 26</a></li>
+                    <li><a href="test/bloque27.html" target="marco-contenido" class="enlace-bloque">Bloque 27</a></li>
+                    <li><a href="test/bloque28.html" target="marco-contenido" class="enlace-bloque">Bloque 28</a></li>
+                    <li><a href="test/bloque29.html" target="marco-contenido" class="enlace-bloque">Bloque 29</a></li>
+                    <li><a href="test/bloque30.html" target="marco-contenido" class="enlace-bloque">Bloque 30</a></li>
+                    <li><a href="test/bloque31.html" target="marco-contenido" class="enlace-bloque">Bloque 31</a></li>
+                    <li><a href="test/bloque32.html" target="marco-contenido" class="enlace-bloque">Bloque 32</a></li>
+                    <li><a href="test/bloque33.html" target="marco-contenido" class="enlace-bloque">Bloque 33</a></li>
+                    <li><a href="test/bloque34.html" target="marco-contenido" class="enlace-bloque">Bloque 34</a></li>
+                    <li><a href="test/bloque35.html" target="marco-contenido" class="enlace-bloque">Bloque 35</a></li>
+                    <li><a href="test/60_aleatorias.html" target="marco-contenido" class="enlace-bloque">Aleatorias</a></li>
+                </ul>
+            </nav>
+
+            <!-- COLUMNA DERECHA: CONTENIDO DEL TEMA SELECCIONADO -->
+            <main class="columna-contenido">
+                <iframe id="marco-contenido" name="marco-contenido" class="marco-contenido" title="Contenido del bloque" srcdoc="<p style=&quot;font-family:Arial, sans-serif; color:#666; text-align:center; margin-top:40px;&quot;>Selecciona un bloque del índice para comenzar el test.</p>"></iframe>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Marca como activo el bloque seleccionado
+        document.querySelectorAll('.enlace-bloque[href]').forEach(function (enlace) {
+            enlace.addEventListener('click', function () {
+                document.querySelectorAll('.enlace-bloque.activo').forEach(function (a) {
+                    a.classList.remove('activo');
+                });
+                enlace.classList.add('activo');
+            });
+        });
+
+        // Escucha la altura real que le reporta cada tema cargado en el iframe
+        // (postMessage funciona aunque el navegador bloquee el acceso directo
+        // a iframe.contentWindow.document al abrir los archivos como file://)
+        window.addEventListener('message', function (event) {
+            if (event.data && event.data.tipo === 'alturaContenido') {
+                document.getElementById('marco-contenido').style.height = event.data.altura + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
